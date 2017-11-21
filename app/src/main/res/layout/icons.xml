@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal">
+
+    <Button
+        android:id="@+id/home"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/home"
+        tools:ignore="ButtonStyle" />
+
+    <Button
+        android:id="@+id/map"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/map"
+        tools:ignore="ButtonStyle" />
+
+    <Button
+        android:id="@+id/skills"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/plus"
+        tools:ignore="ButtonStyle" />
+
+    <Button
+        android:id="@+id/codex"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:background="@drawable/list"
+        tools:ignore="ButtonStyle" />
+
+</LinearLayout>
