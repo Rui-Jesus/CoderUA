@@ -16,6 +16,7 @@ public class DataHolder {
     private Location mCurrentLocation;
     private String mLastUpdateTime;
     private ArrayList<Mob> listOfMobs;
+    private User currentUser;
 
     /* Structure that stores in memory all mobs of the app
      * In theory this is the most efficient way given the device has the memory for it
@@ -56,4 +57,7 @@ public class DataHolder {
 
     public void setListOfMobs(ArrayList<Mob> listOfMobs){ this.listOfMobs = listOfMobs; }
 
+    public User getCurrentUser() { return currentUser; }
+
+    public void setCurrentUser(User currentUser) { this.currentUser = currentUser; }
 }
