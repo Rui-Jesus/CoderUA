@@ -18,6 +18,7 @@ package com.google.firebase.codelab.coderua;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -101,8 +102,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         }
 
-        TextView textView = (TextView) findViewById(R.id.textView);
+        TextView textView = findViewById(R.id.textView);
         textView.setText(mUsername);
+        DatabaseManager.setUser(this, mFirebaseUser.getEmail(), mUsername);
 
         //For location
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -230,5 +232,18 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         // be available.
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
+    }
+
+    public void fillLayout() {
+        DataHolder.getInstance().setCurrentUser(DatabaseManager.getUser());
+        ProgressBar bar = findViewById(R.id.levelBar);
+        bar.setProgress(DataHolder.getInstance().getCurrentUser().getPercentage());
+        TextView level = findViewById(R.id.level);
+        level.setText("Lvl. "+ DataHolder.getInstance().getCurrentUser().getLevel());
+        TextView username = findViewById(R.id.username);
+        username.setText(DataHolder.getInstance().getCurrentUser().getUid());
+        Button pressed = findViewById(R.id.home);
+        pressed.setEnabled(false);
+        pressed.setTextColor(Color.parseColor("#000000"));
     }
 }

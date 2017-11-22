@@ -16,21 +16,21 @@ public class SkillsPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_skills_page);
-        ProgressBar proximity = (ProgressBar) findViewById(R.id.proximityBar);
+        ProgressBar proximity = findViewById(R.id.proximityBar);
         proximity.setProgress(250-DataHolder.getInstance().getCurrentUser().getProximity());
-        ProgressBar bar = (ProgressBar) findViewById(R.id.levelBar);
+        ProgressBar bar = findViewById(R.id.levelBar);
         bar.setProgress(DataHolder.getInstance().getCurrentUser().getPercentage());
-        ProgressBar range = (ProgressBar) findViewById(R.id.rangeBar);
+        ProgressBar range = findViewById(R.id.rangeBar);
         range.setProgress(DataHolder.getInstance().getCurrentUser().getRange());
-        ProgressBar rate = (ProgressBar) findViewById(R.id.spawnBar);
+        ProgressBar rate = findViewById(R.id.spawnBar);
         rate.setProgress(DataHolder.getInstance().getCurrentUser().getRarerate());
-        ProgressBar nmobsBar = (ProgressBar) findViewById(R.id.pointsBar);
+        ProgressBar nmobsBar = findViewById(R.id.pointsBar);
         nmobsBar.setProgress(DataHolder.getInstance().getCurrentUser().getNmobs());
-        TextView level = (TextView) findViewById(R.id.level);
+        TextView level = findViewById(R.id.level);
         level.setText("Lvl. "+DataHolder.getInstance().getCurrentUser().getLevel());
-        TextView username = (TextView) findViewById(R.id.username);
+        TextView username = findViewById(R.id.username);
         username.setText(DataHolder.getInstance().getCurrentUser().getUid());
-        Button pressed = (Button) findViewById(R.id.skills);
+        Button pressed = findViewById(R.id.skills);
         pressed.setEnabled(false);
         pressed.setTextColor(Color.parseColor("#000000"));
     }
