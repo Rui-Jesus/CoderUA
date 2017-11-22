@@ -1,6 +1,5 @@
 package com.google.firebase.codelab.coderua;
 
-import android.graphics.BitmapFactory;
 import android.location.Location;
 
 import java.util.ArrayList;
@@ -11,13 +10,16 @@ import java.util.ArrayList;
  */
 public class DataHolder {
 
-
     private static DataHolder instance;
+
     private boolean permissionsGranted;
     private Location mCurrentLocation;
     private String mLastUpdateTime;
-    private ArrayList<Location> listOfLocations;
     private ArrayList<Mob> listOfMobs;
+
+    /* Structure that stores in memory all mobs of the app
+     * In theory this is the most efficient way given the device has the memory for it
+      * In a future implementation this could be stored in a local file, although on fast devices IO could become a bottleneck*/
 
 
     public static synchronized DataHolder getInstance() {
@@ -28,6 +30,7 @@ public class DataHolder {
 
     private DataHolder() {
     }
+
 
     public boolean getPermissionsGranted() {
         return permissionsGranted;
@@ -48,10 +51,6 @@ public class DataHolder {
     public void setmLastUpdateTime(String date){
         this.mLastUpdateTime = date;
     }
-
-    public ArrayList<Location> getListOfLocations() { return listOfLocations;  }
-
-    public void setListOfLocations (ArrayList<Location> lst) { this.listOfLocations = lst; }
 
     public ArrayList<Mob> getListOfMobs () { return listOfMobs; }
 

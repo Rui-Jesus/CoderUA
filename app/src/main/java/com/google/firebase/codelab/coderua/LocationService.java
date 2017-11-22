@@ -24,6 +24,7 @@ import com.google.android.gms.location.LocationServices;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 
 
@@ -39,14 +40,13 @@ public class LocationService extends Service {
     public static final String ACTION3 = "LIST_CHANGED";
 
     private String mLastUpdateTime;
-    private boolean tryNotfication;
+    private Random rand;
 
     /*Variables for location updates*/
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mCurrentLocation;
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
-    private ArrayList<Location> listOfLocations;
     private ArrayList<Mob> listOfMobs;
 
     /* Support tools */
@@ -61,11 +61,10 @@ public class LocationService extends Service {
     public void onCreate (){
         super.onCreate();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        listOfLocations = new ArrayList<>();
         listOfMobs = new ArrayList<>();
 
         mLastUpdateTime = "";
-        tryNotfication = true;
+        rand = new Random();
 
         //Let's start a thread to create some heavy job
         locationThread = new Thread(locationJob);
@@ -205,6 +204,7 @@ public class LocationService extends Service {
 
             //noinspection MissingPermission
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+            //mFusedLocationClient.requestLocationUpdates()
         }
     }
 
@@ -218,7 +218,7 @@ public class LocationService extends Service {
 
         //We only want to have 3 locations being displayed at a time
         //The number will be an argument in the future
-        if(listOfLocations.size() <= 5){
+        if(listOfMobs.size() < 5){
 
             Random random = new Random();
             double radiusInDegrees = radius / 111000f;
@@ -239,11 +239,10 @@ public class LocationService extends Service {
             Location finalLocation = new Location("not important");
             finalLocation.setLongitude(finalLongitude);
             finalLocation.setLatitude(finalLatitude);
-            Mob mob = generateMob(100, finalLocation); //This id will be generated randomly
+            Mob mob = generateMob(); //This id will be generated randomly
+            mob.setLocation(finalLocation);
             listOfMobs.add(mob);
-            listOfLocations.add(finalLocation);
             //Update the list in the data holder
-            DataHolder.getInstance().setListOfLocations(listOfLocations);
             DataHolder.getInstance().setListOfMobs(listOfMobs);
 
             //Lets warn the maps activity that a new point was created and needs to be represented on the map
@@ -260,22 +259,23 @@ public class LocationService extends Service {
 
     }
 
-    private Mob generateMob(int mobID, Location location){
+    private Mob generateMob(){
 
-        switch (mobID){
-            case 100: //The mob is "Ctos"
-                return new Mob(BitmapFactory.decodeResource(getResources(), R.mipmap.ctos_mob), 100, "Ctos", "C", location);
-            default:
-                return null;
+        HashMap<Integer, Mob> mobDict = MobsHolder.getInstance(this).getAppMobs();
+        int aux = mobDict.size();
 
-        }
+        int randomNum = rand.nextInt((aux - 0)) + 0;
+        int id = (int) mobDict.keySet().toArray()[randomNum];
+
+        return mobDict.get(id);
+
 
     }
 
     /**
      * A function that will check if our current calculated points need to be deleted due to being too far away from the user already
      * @param dist The distance at which the points will be deleted
-     * @param closeDist The distance at which the user is close enough to be warned about a mob
+     * @param closeDist The distance at which the user is close enough to receive a notification about a mob
      * @param catchDist The distance at which the user can catch the mob
      * @return Wether or not we need to update our points on the map
      */
@@ -288,8 +288,9 @@ public class LocationService extends Service {
         boolean needsRemoval = false;
         double nRemoved = 0; //To help in the process
 
-        for(Mob mob : listOfMobs){
-
+        //We will be removing objects from the list in this proccess, we have to iterate backwards.
+        for(int i = listOfMobs.size()-1; i>=0; i--){
+            Mob mob = listOfMobs.get(i);
             Location loc = mob.getLocation();
             double dLat = degreesToRadians(mCurrentLocation.getLatitude() - loc.getLatitude());
             double dLon = degreesToRadians(mCurrentLocation.getLongitude() - loc.getLongitude());
@@ -307,7 +308,8 @@ public class LocationService extends Service {
             //Both dist and distanceInBetween come in KM
             if(dist < distanceInBetween){
                 needsRemoval = true;
-                removeMobFromList(mob);
+                //removeMobFromList(mob);
+                listOfMobs.remove(i);
                 nRemoved++;
             }
             //Is close enough to send a notification
@@ -316,9 +318,9 @@ public class LocationService extends Service {
                 //Get the default sound
                 Uri uri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.pokeball_launcher)
+                        .setSmallIcon(R.mipmap.app_launcher)
                         .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
-                                R.mipmap.pokeball_launcher))
+                                R.mipmap.app_launcher))
                         .setContentTitle("Monster near by !!!")
                         .setContentText("A wild programmer has appeared")
                         .setSound(uri)
@@ -336,15 +338,24 @@ public class LocationService extends Service {
             //Is close enough for the user to catch it
             else if( distanceInBetween < catchDist ){
                 Log.i("TAG", "I catched something");
-                Intent intent = new Intent(LocationService.this, CatchActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                //If this is active is not active, we want to start it.
+                //It might happen that the user has 2 mobs really close by and he can´t catch them both at the same time
+                if(CatchActivity.notActive) {
+                    Intent intent = new Intent(LocationService.this, CatchActivity.class);
+                    intent.putExtra("mobID", mob.getMobID());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    getApplication().startActivity(intent);
+                    //The mob was caught, we want to remove it from the list
+                    needsRemoval = true;
+                    nRemoved++;
+                    //removeMobFromList(mob);
+                    listOfMobs.remove(i);
+                }
             }
 
         }
 
         //Update the list in the data holder
-        DataHolder.getInstance().setListOfLocations(listOfLocations);
         DataHolder.getInstance().setListOfMobs(listOfMobs);
 
         //Items to remove were detected, we have to warn the system

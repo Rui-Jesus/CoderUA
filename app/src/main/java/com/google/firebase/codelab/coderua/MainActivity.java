@@ -18,6 +18,7 @@ package com.google.firebase.codelab.coderua;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -108,10 +109,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLocationPermission();
 
-        /* Start the service responsible for getting location updates */
-        //Intent intent = new Intent(this,LocationService.class);
-        //this.startService(intent);
-
+        /* The user cannot go back to this activity */
+        Button pressed = (Button) findViewById(R.id.home);
+        pressed.setEnabled(false);
+        pressed.setTextColor(Color.parseColor("#000000"));
     }
 
     /**

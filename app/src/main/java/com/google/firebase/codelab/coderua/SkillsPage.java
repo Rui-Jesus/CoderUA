@@ -36,12 +36,12 @@ public class SkillsPage extends AppCompatActivity {
     }
 
     protected void goToCodex(View v){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, CodexPage.class);
         startActivity(intent);
     }
 
     protected void goToMap(View v){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MapsActivity2.class);
         startActivity(intent);
     }
 

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -86,7 +88,7 @@ public class MapsActivity2 extends AppCompatActivity
 
         // Build the map.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
@@ -97,6 +99,11 @@ public class MapsActivity2 extends AppCompatActivity
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 mMessageReceiver3, new IntentFilter(ACTION3));
+
+        /* The user cannot go back to this activity */
+        Button pressed = (Button) findViewById(R.id.map);
+        pressed.setEnabled(false);
+        pressed.setTextColor(Color.parseColor("#000000"));
 
     }
 
@@ -259,7 +266,7 @@ public class MapsActivity2 extends AppCompatActivity
             public View getInfoContents(Marker marker) {
                 // Inflate the layouts for the info window, title and snippet.
                 View infoWindow = getLayoutInflater().inflate(R.layout.custom_info_contents,
-                        (FrameLayout) findViewById(R.id.map), false);
+                        (FrameLayout) findViewById(R.id.mapFragment), false);
 
                 TextView title = ((TextView) infoWindow.findViewById(R.id.title));
                 title.setText(marker.getTitle());
@@ -319,6 +326,22 @@ public class MapsActivity2 extends AppCompatActivity
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+    /* Métodos para navegação entre as páginas */
+    protected void goToCodex(View v){
+        Intent intent = new Intent(this, CodexPage.class);
+        startActivity(intent);
+    }
+
+    protected void goToHome(View v){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    protected void goToSkills(View v){
+        Intent intent = new Intent(this, SkillsPage.class);
+        startActivity(intent);
     }
 
     @Override

@@ -38,6 +38,14 @@ public class Mob {
         wasFocused = false;
     }
 
+    public Mob(Bitmap image, int mobID, String name, String type){
+        this.image = image;
+        this.mobID = mobID;
+        this.name = name;
+        this.type = type;
+        wasFocused = false;
+    }
+
     public Location getLocation() {
         return location;
     }
