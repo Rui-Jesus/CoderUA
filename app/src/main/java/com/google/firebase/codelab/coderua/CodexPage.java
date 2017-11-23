@@ -35,7 +35,7 @@ public class CodexPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_codex_page);
         CustomList adapter = new CustomList(CodexPage.this, web, imageId);
-        list = (ListView)findViewById(R.id.list);
+        list = findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -57,7 +57,7 @@ public class CodexPage extends AppCompatActivity {
             }
 
         });
-        ProgressBar bar = (ProgressBar) findViewById(R.id.levelBar);
+        ProgressBar bar = findViewById(R.id.levelBar);
         int percentage = DataHolder.getInstance().getCurrentUser().getPercentage();
         if (percentage == -1){
             bar.setProgress(0);

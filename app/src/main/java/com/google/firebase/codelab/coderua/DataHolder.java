@@ -16,6 +16,7 @@ public class DataHolder {
     private Location mCurrentLocation;
     private String mLastUpdateTime;
     private ArrayList<Mob> listOfMobs;
+    private ArrayList<Mob> mobsToRemove;
     private User currentUser;
 
     /* Structure that stores in memory all mobs of the app
@@ -60,4 +61,8 @@ public class DataHolder {
     public User getCurrentUser() { return currentUser; }
 
     public void setCurrentUser(User currentUser) { this.currentUser = currentUser; }
+
+    public ArrayList<Mob> getMobsToRemove() { return mobsToRemove; }
+
+    public void setMobsToRemove(ArrayList<Mob> lst){ mobsToRemove = lst; }
 }

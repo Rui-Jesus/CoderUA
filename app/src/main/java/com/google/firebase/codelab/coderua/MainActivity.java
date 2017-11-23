@@ -189,6 +189,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         startActivity(intent);
     }
 
+    protected void logoutClick(View v){
+        //implementar logout
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -237,9 +241,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void fillLayout() {
         DataHolder.getInstance().setCurrentUser(DatabaseManager.getUser());
         ProgressBar bar = findViewById(R.id.levelBar);
-        bar.setProgress(DataHolder.getInstance().getCurrentUser().getPercentage());
+        int percentage  =DataHolder.getInstance().getCurrentUser().getPercentage();
+        bar.setProgress(percentage);
         TextView level = findViewById(R.id.level);
-        level.setText("Lvl. "+ DataHolder.getInstance().getCurrentUser().getLevel());
+        level.setText(R.string.level+ DataHolder.getInstance().getCurrentUser().getLevel());
         TextView username = findViewById(R.id.username);
         username.setText(DataHolder.getInstance().getCurrentUser().getUid());
         Button pressed = findViewById(R.id.home);

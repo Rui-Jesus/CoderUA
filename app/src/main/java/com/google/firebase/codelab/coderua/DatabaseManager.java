@@ -14,6 +14,7 @@ public class DatabaseManager {
 
     private static User user;
 
+    //get's the user's info
     static void setUser(final MainActivity mainClass, final String displayEmail, final String displayName){
         DatabaseReference ref= database.child("Users");
         ValueEventListener eventListener = new ValueEventListener() {
@@ -22,7 +23,7 @@ public class DatabaseManager {
                 String name = "";
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     if(ds.child("email").getValue(String.class).equals(displayEmail)) {
-                        user = new User(ds.child("name").getValue(String.class), displayEmail, ds.child("level").getValue(Integer.class), ds.child("nmobs").getValue(Integer.class), ds.child("mobsCaught").getValue(ArrayList.class), ds.child("proximity").getValue(Integer.class), ds.child("rarerate").getValue(Integer.class), ds.child("range").getValue(Integer.class), ds.child("percentage").getValue(Integer.class));
+                        user = new User(ds.child("name").getValue(String.class), displayEmail, ds.child("level").getValue(Integer.class), ds.child("nmobs").getValue(Integer.class), ds.child("mobsCaught").getValue(ArrayList.class), ds.child("proximity").getValue(Integer.class), ds.child("rarerate").getValue(Integer.class), ds.child("range").getValue(Integer.class), ds.child("percentage").getValue(Integer.class), ds.child("updateAvailable").getValue(Integer.class));
                         break;
                     }
                 }
@@ -37,6 +38,7 @@ public class DatabaseManager {
         ref.addValueEventListener(eventListener);
     }
 
+    //function to create an user if it doesn't exist in the database
     private static void createUser(String name, String email){
         user =  new User(name, email);
         database.child("Users").child("" + email.hashCode()).updateChildren(user.getMap());

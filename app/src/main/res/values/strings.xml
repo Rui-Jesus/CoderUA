@@ -1,5 +1,6 @@
 <resources>
 
+
     <!-- App related Strings -->
     <string name="app_name">CoderUA</string>
     <string name="welcome_msg">Welcome!</string>
@@ -43,5 +44,4 @@
     <string name="points_string">Number of points shown</string>
     <string name="rate_string">Rare Spawn Rate</string>
     <string name="range_string">Catching range</string>
-
 </resources>

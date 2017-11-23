@@ -15,6 +15,7 @@ public class User {
     private int rarerate; //probabilidade de nascer um mob raro
     private int range; //distancia a que tem de estar do mob para o apanhar
     private int percentage; //percentagem a que esta o nivel
+    private int upgradeAvailable; //numero de vezes que o user ainda pode evoluir skills
 
     //se o user ainda nao existir é criado com os dados essenciais, tendo os restantes com o seu default value
     public User(String uid, String email){
@@ -27,10 +28,11 @@ public class User {
         rarerate = 5;
         range = 5;
         percentage = 0;
+        upgradeAvailable = 0;
     }
 
     //se o user já existir é criado com todos os dados
-    public User(String uid, String email, int level, int nmobs, ArrayList<Integer> mobsCaught, int proximity, int rarerate, int range, int percentage){
+    public User(String uid, String email, int level, int nmobs, ArrayList<Integer> mobsCaught, int proximity, int rarerate, int range, int percentage, int upgradeAvailable){
         this.uid = uid;
         this.email = email;
         this.level = level;
@@ -40,6 +42,7 @@ public class User {
         this.rarerate = rarerate;
         this.range = range;
         this.percentage = percentage;
+        this.upgradeAvailable = upgradeAvailable;
     }
 
     //Mapa a ser usado para fazer upload dos dados para a base de dados
@@ -54,6 +57,7 @@ public class User {
         map.put("rarerate", rarerate);
         map.put("range", range);
         map.put("percentage", percentage);
+        map.put("updateAvailable", upgradeAvailable);
         return map;
     }
 
@@ -69,6 +73,7 @@ public class User {
                 ", rarerate=" + rarerate +
                 ", range=" + range +
                 ", level percentage=" + percentage +
+                ", isUpgradeAvailable=" + upgradeAvailable +
                 '}';
     }
 
@@ -79,8 +84,6 @@ public class User {
     public int getLevel() { return level; }
 
     public void setLevel(int level) { this.level = level; }
-
-    public void setEmail(String email) { this.email = email; }
 
     public String getEmail() { return email; }
 
@@ -108,5 +111,13 @@ public class User {
 
     public void setPercentage(int percentage) {
         this.percentage = percentage;
+    }
+
+    public int getUpgradeAvailable() {
+        return upgradeAvailable;
+    }
+
+    public void setUpgradeAvailable(int upgradeAvailable) {
+        this.upgradeAvailable = upgradeAvailable;
     }
 }
