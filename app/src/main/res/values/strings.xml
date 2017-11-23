@@ -1,6 +1,5 @@
 <resources>
 
-
     <!-- App related Strings -->
     <string name="app_name">CoderUA</string>
     <string name="welcome_msg">Welcome!</string>
@@ -34,5 +33,15 @@
     <string name="default_info_snippet">No places found, because location permission is disabled.</string>
     <string name="option_get_place">Get place</string>
     <string name="pick_place">Choose a place</string>
+
+    <!--String for topbar-->
+    <string name="level">Lv. </string>
+
+    <!--Strings for skills page-->
+    <string name="skills_menu">Skills Menu</string>
+    <string name="spawn_string">Spawning distance</string>
+    <string name="points_string">Number of points shown</string>
+    <string name="rate_string">Rare Spawn Rate</string>
+    <string name="range_string">Catching range</string>
 
 </resources>

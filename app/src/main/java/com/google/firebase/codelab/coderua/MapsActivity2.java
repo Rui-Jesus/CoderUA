@@ -36,7 +36,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * An activity that displays a map showing the place at the device's current location.
@@ -54,7 +56,7 @@ public class MapsActivity2 extends AppCompatActivity
     private Marker userMarker;
 
     private boolean firstTime;
-    private ArrayList<Marker> listOfMarkers;
+    private HashMap<Integer,Marker> mapOfMarkers;
 
     // A default location (Sydney, Australia) and default zoom to use when location permission is
     // not granted.
@@ -84,7 +86,7 @@ public class MapsActivity2 extends AppCompatActivity
         setContentView(R.layout.activity_maps);
 
         firstTime = true;
-        listOfMarkers = new ArrayList<>();
+        mapOfMarkers = new HashMap<>();
 
         // Build the map.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -153,6 +155,7 @@ public class MapsActivity2 extends AppCompatActivity
 
             Double currentLatitude = intent.getDoubleExtra("latitude", 0);
             Double currentLongitude = intent.getDoubleExtra("longitude", 0);
+            Integer internalID = intent.getIntExtra("internalID", 0);
             Bitmap bitmap = intent.getParcelableExtra("bitmap");
 
             Location locationReceived = new Location("notImportant");
@@ -165,7 +168,7 @@ public class MapsActivity2 extends AppCompatActivity
                     .position(new LatLng(locationReceived.getLatitude(),locationReceived.getLongitude()))
                     .icon(BitmapDescriptorFactory.fromBitmap(bitmap));
             Marker m = mMap.addMarker(a);
-            listOfMarkers.add(m);
+            mapOfMarkers.put(internalID, m);
         }
     };
 
@@ -182,7 +185,13 @@ public class MapsActivity2 extends AppCompatActivity
             double nToRemove = intent.getDoubleExtra("nToRemove", 0);
 
             //We will run an Async task so that the ui doesn't slow down
-            new MyAsyncTask().execute(nToRemove);
+            //new MyAsyncTask().execute(nToRemove);
+            for(Mob m: DataHolder.getInstance().getMobsToRemove()){
+                Marker marker = mapOfMarkers.get(m.getInternalId());
+                if(marker != null)
+                    marker.remove();
+                mapOfMarkers.remove(m.getInternalId());
+            }
         }
     };
 
@@ -191,6 +200,8 @@ public class MapsActivity2 extends AppCompatActivity
      * A private class to handle some quick jobs that the map needs. Used to prevent blocking the UI thread
      */
     private class MyAsyncTask extends AsyncTask<Double, Void, Void> {
+
+        ArrayList<Integer> indexesToRemove = new ArrayList<>();
 
         protected void onPreExecute() {
             // Runs on the UI thread before doInBackground
@@ -202,21 +213,7 @@ public class MapsActivity2 extends AppCompatActivity
         protected Void doInBackground(Double... doubles) {
             // Some long-running task like downloading an image.
 
-            double nToRemove = doubles[0];
-
-            //Here we will check which of the points is to be deleted
-            for(Marker m : listOfMarkers){
-                for(Mob mob : DataHolder.getInstance().getListOfMobs()){
-                    Location loc = mob.getLocation();
-                    LatLng latLng = new LatLng(loc.getLatitude(), loc.getLongitude());
-                    if(m.getPosition() == latLng) { //They share the same place, we need to remove it
-                        m.remove();
-                        nToRemove--;
-                    }
-                }
-                if(nToRemove == 0) //We've reached the end, no point in continuing
-                    break;
-            }
+            //double nToRemove = doubles[0];
 
             return null;
         }
@@ -283,10 +280,11 @@ public class MapsActivity2 extends AppCompatActivity
 
         //Need to initialize a point first, or else the map will have no place to point at
         Location loc = DataHolder.getInstance().getmCurrentLocation();
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                new LatLng(loc.getLatitude(),
-                        loc.getLongitude()), DEFAULT_ZOOM));
-
+        if(loc != null) { //The service might not have produced a location yet
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(loc.getLatitude(),
+                            loc.getLongitude()), DEFAULT_ZOOM));
+        }
         //Because the service may already created some points to represent, we need to to get them.
         //Once the map is up and ready to go, the other points will be caught by the broadcast receivers
         drawMarkers();
@@ -297,12 +295,14 @@ public class MapsActivity2 extends AppCompatActivity
         ArrayList<Mob> lst = DataHolder.getInstance().getListOfMobs();
 
         //The same code present in broadcast receiver 2
-        for(Mob mob : lst){
-            MarkerOptions a = new MarkerOptions()
-                    .position(new LatLng(mob.getLocation().getLatitude(),mob.getLocation().getLongitude()))
-                    .icon(BitmapDescriptorFactory.fromBitmap(mob.getImage()));
-            Marker m = mMap.addMarker(a);
-            listOfMarkers.add(m);
+        if(lst != null) { //The list might be empty, if the user opened this activity way too fast
+            for (Mob mob : lst) {
+                MarkerOptions a = new MarkerOptions()
+                        .position(new LatLng(mob.getLocation().getLatitude(), mob.getLocation().getLongitude()))
+                        .icon(BitmapDescriptorFactory.fromBitmap(mob.getImage()));
+                Marker m = mMap.addMarker(a);
+                mapOfMarkers.put(mob.getInternalId(), m);
+            }
         }
 
     }

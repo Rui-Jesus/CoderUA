@@ -48,6 +48,7 @@ public class LocationService extends Service {
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     private ArrayList<Mob> listOfMobs;
+    private int mobCount; //To give unique internal ids to the mobs created
 
     /* Support tools */
     private Thread locationThread;
@@ -65,7 +66,7 @@ public class LocationService extends Service {
 
         mLastUpdateTime = "";
         rand = new Random();
-
+        mobCount = 0;
         //Let's start a thread to create some heavy job
         locationThread = new Thread(locationJob);
 
@@ -114,7 +115,7 @@ public class LocationService extends Service {
 
             while(true){
 
-                checkDistance(0.3, 0.050, 0.010); //300 meters | 50 meters | 10 meters
+                checkDistance(0.3, 0.050, 0.020); //300 meters | 50 meters | 20 meters
                 //Running this thread non-stop is quite heavy, and once checkDisntance is ran, we don´t need to immediately start again
                 try {
                     Thread.sleep(3500); //wait 3.5 seconds at the end of each turn
@@ -158,15 +159,14 @@ public class LocationService extends Service {
                 mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
 
                 DataHolder.getInstance().setmCurrentLocation(mCurrentLocation);
-                mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
                 DataHolder.getInstance().setmLastUpdateTime(mLastUpdateTime);
 
                 Intent intent = new Intent(ACTION);
-                sendLocationBroadcast(intent, mCurrentLocation, null);
+                sendLocationBroadcast(intent, mCurrentLocation, null, 0);
 
                 //We got a new point, we want to generate a new position around it
                 //The double will be an argument but for now is static. It's represented in KM
-                generateCoords(mCurrentLocation, 175); //175 meters around the location
+                generateCoords(mCurrentLocation, 275); //175 meters around the location
 
             }
         };
@@ -178,11 +178,13 @@ public class LocationService extends Service {
      * @param location The location to transmit to the system
      * @param bitmap In case we're creating a mob, this will be it's representation
      */
-    private void sendLocationBroadcast(Intent intent, Location location, Bitmap bitmap){
+    private void sendLocationBroadcast(Intent intent, Location location, Bitmap bitmap, int internalID){
         intent.putExtra("latitude", location.getLatitude());
         intent.putExtra("longitude", location.getLongitude());
-        if(bitmap != null)
+        if(bitmap != null){
             intent.putExtra("bitmap", bitmap);
+            intent.putExtra("internalID", internalID);
+        }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         Log.i(TAG, "Sending broadcast");
     }
@@ -198,19 +200,16 @@ public class LocationService extends Service {
      */
     private void startLocationUpdates() {
         // Begin by checking if the device has the necessary location settings.
-
         if(DataHolder.getInstance().getPermissionsGranted()){
             Log.i(TAG, "All location settings are satisfied.");
 
             //noinspection MissingPermission
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-            //mFusedLocationClient.requestLocationUpdates()
         }
     }
 
     /**
      * Method to generate random coords around a location
-     *
      * @param location User last known location, provided by google api
      * @param radius Distance from the user location, in Kilometers
      */
@@ -239,7 +238,7 @@ public class LocationService extends Service {
             Location finalLocation = new Location("not important");
             finalLocation.setLongitude(finalLongitude);
             finalLocation.setLatitude(finalLatitude);
-            Mob mob = generateMob(); //This id will be generated randomly
+            Mob mob = generateMob();
             mob.setLocation(finalLocation);
             listOfMobs.add(mob);
             //Update the list in the data holder
@@ -248,8 +247,8 @@ public class LocationService extends Service {
             //Lets warn the maps activity that a new point was created and needs to be represented on the map
             //we need a different message to let the map know how to handle the points given
             Intent intent = new Intent(ACTION2);
-            Log.i(TAG, "New Spawn, sending broadcast");
-            sendLocationBroadcast(intent, finalLocation, mob.getImage());
+            Log.i(TAG, "New Spawn, sending broadcast, it's id is: " + mob.getInternalId());
+            sendLocationBroadcast(intent, finalLocation, mob.getImage(), mob.getInternalId());
 
         }
         else{
@@ -264,11 +263,13 @@ public class LocationService extends Service {
         HashMap<Integer, Mob> mobDict = MobsHolder.getInstance(this).getAppMobs();
         int aux = mobDict.size();
 
-        int randomNum = rand.nextInt((aux - 0)) + 0;
+        int randomNum = rand.nextInt(aux);
         int id = (int) mobDict.keySet().toArray()[randomNum];
 
-        return mobDict.get(id);
+        Mob mob = mobDict.get(id);
+        mob.setInternalId(mobCount++);
 
+        return mobDict.get(id);
 
     }
 
@@ -287,6 +288,7 @@ public class LocationService extends Service {
         int earthRadiusKm = 6371;
         boolean needsRemoval = false;
         double nRemoved = 0; //To help in the process
+        ArrayList<Mob> mobsToRemove = new ArrayList<>(); //To help in the process
 
         //We will be removing objects from the list in this proccess, we have to iterate backwards.
         for(int i = listOfMobs.size()-1; i>=0; i--){
@@ -309,8 +311,10 @@ public class LocationService extends Service {
             if(dist < distanceInBetween){
                 needsRemoval = true;
                 //removeMobFromList(mob);
+                mobsToRemove.add(mob);
                 listOfMobs.remove(i);
                 nRemoved++;
+                Log.i(TAG, "Id of mob to be removed: " + mob.getInternalId());
             }
             //Is close enough to send a notification
             //However, if this specific mob was already notified, we don´t want to notify it again, or else the phone won't stop ringing
@@ -350,6 +354,7 @@ public class LocationService extends Service {
                     nRemoved++;
                     //removeMobFromList(mob);
                     listOfMobs.remove(i);
+                    mobsToRemove.add(mob);
                 }
             }
 
@@ -357,6 +362,7 @@ public class LocationService extends Service {
 
         //Update the list in the data holder
         DataHolder.getInstance().setListOfMobs(listOfMobs);
+        DataHolder.getInstance().setMobsToRemove(mobsToRemove);
 
         //Items to remove were detected, we have to warn the system
         if(needsRemoval){

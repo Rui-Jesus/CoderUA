@@ -28,6 +28,8 @@ public class Mob {
     private int mobID;
     private String name;
     private String type;
+    private static int count = 0;
+    private int internalId;
 
     public Mob(Bitmap image, int mobID, String name, String type, Location location){
         this.image = image;
@@ -36,6 +38,7 @@ public class Mob {
         this.type = type;
         this.location = location;
         wasFocused = false;
+        internalId = count++;
     }
 
     public Mob(Bitmap image, int mobID, String name, String type){
@@ -85,6 +88,10 @@ public class Mob {
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getInternalId() { return internalId; }
+
+    public void setInternalId(int id) { internalId = id; }
 
     @Override
     public boolean equals(Object o) {
