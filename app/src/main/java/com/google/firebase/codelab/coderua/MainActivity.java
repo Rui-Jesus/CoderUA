@@ -43,6 +43,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     //Firebase variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
+    private AdView mAdView;
 
     //Google api variables
     private FusedLocationProviderClient mFusedLocationProviderClient;
@@ -104,6 +107,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         TextView textView = (TextView) findViewById(R.id.textView);
         textView.setText(mUsername);
+
+        //When the user logs in, we set him up
+        DatabaseManager.setUser(this, mFirebaseUser.getEmail(), mUsername);
+
+        /* To place the adds */
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         //For location
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -190,16 +201,23 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onPause() {
+        if (mAdView != null)
+            mAdView.pause();
         super.onPause();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (mAdView != null)
+            mAdView.resume();
     }
 
     @Override
     public void onDestroy() {
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
         super.onDestroy();
     }
 
@@ -232,4 +250,24 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
         Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
+
+    public void fillLayout() {
+        DataHolder.getInstance().setCurrentUser(DatabaseManager.getUser());
+        ProgressBar bar = findViewById(R.id.levelBar);
+        int percentage = DataHolder.getInstance().getCurrentUser().getPercentage();
+        if (percentage == -1){
+            bar.setProgress(0);
+        } else {
+            bar.setProgress(percentage);
+        }
+        TextView level = findViewById(R.id.level);
+        level.setText(R.string.level+ DataHolder.getInstance().getCurrentUser().getLevel());
+        TextView username = findViewById(R.id.username);
+        username.setText(DataHolder.getInstance().getCurrentUser().getUid());
+        Button pressed = findViewById(R.id.home);
+        pressed.setEnabled(false);
+        pressed.setTextColor(Color.parseColor("#000000"));
+    }
+
+
 }

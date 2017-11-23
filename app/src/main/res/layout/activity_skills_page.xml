@@ -13,7 +13,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="64dp"
-        android:text="Skills Menu"
+        android:text="@string/skills_menu"
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -45,7 +45,7 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Range"
+                android:text="@string/spawn_string"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,8 +54,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <TextView
+                    android:textAlignment="center"
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spawnInfo"/>
+
                 <ProgressBar
-                    android:id="@+id/rangeBar"
+                    android:id="@+id/proximityBar"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="210dp"
                     android:layout_height="32dp"
@@ -64,12 +70,11 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView" />
 
                 <Button
-                    android:id="@+id/button"
+                    android:id="@+id/prox"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:background="@drawable/plus"
-                    tools:layout_editor_absoluteX="288dp"
-                    tools:layout_editor_absoluteY="293dp" />
+                    android:onClick="proximity"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -83,12 +88,18 @@
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Number of points shown" />
+                android:text="@string/points_string" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:textAlignment="center"
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pointsInfo"/>
 
                 <ProgressBar
                     android:id="@+id/pointsBar"
@@ -99,12 +110,11 @@
                     app:layout_constraintLeft_toLeftOf="parent" />
 
                 <Button
-                    android:id="@+id/button2"
+                    android:id="@+id/pts"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:background="@drawable/plus"
-                    tools:layout_editor_absoluteX="288dp"
-                    tools:layout_editor_absoluteY="360dp" />
+                    android:onClick="points"/>
 
             </LinearLayout>
 
@@ -119,7 +129,7 @@
                 android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rare Spawn Rate"
+                android:text="@string/rate_string"
                 app:layout_constraintBottom_toTopOf="@+id/spawnBar"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/pointsBar"
@@ -130,21 +140,74 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+                <TextView
+                    android:textAlignment="center"
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rareInfo"/>
+
                 <ProgressBar
                     android:id="@+id/spawnBar"
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="210dp"
                     android:layout_height="32dp"
-                    android:max="10"
+                    android:max="25"
                     app:layout_constraintLeft_toLeftOf="parent"/>
 
                 <Button
-                    android:id="@+id/button3"
+                    android:id="@+id/spwn"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/plus"/>
+                    android:background="@drawable/plus"
+                    android:onClick="spawn"/>
             </LinearLayout>
+
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/range_string"
+                app:layout_constraintBottom_toTopOf="@+id/spawnBar"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/pointsBar"
+                app:layout_constraintVertical_bias="0.8" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:textAlignment="center"
+                    android:layout_width="64dp"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rangeInfo"/>
+
+                <ProgressBar
+                    android:id="@+id/rangeBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="210dp"
+                    android:layout_height="32dp"
+                    android:max="25"
+                    app:layout_constraintLeft_toLeftOf="parent"/>
+
+                <Button
+                    android:id="@+id/rng"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/plus"
+                    android:onClick="range"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
     </LinearLayout>
 
     <include layout="@layout/bottombar"/>

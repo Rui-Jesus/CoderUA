@@ -42,7 +42,8 @@
             android:layout_gravity="right"
             android:layout_marginRight="16dp"
             android:background="@drawable/logout"
-            android:id="@+id/logout"/>
+            android:id="@+id/logout"
+            android:onClick="logoutClick"/>
     </LinearLayout>
 
 </LinearLayout>
