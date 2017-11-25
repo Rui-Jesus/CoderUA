@@ -61,7 +61,7 @@
             android:text="@string/menu_codex"
             android:textSize="10sp"
             android:onClick="goToCodex"
-             />
+            tools:ignore="ButtonStyle" />
 
     </LinearLayout>
 

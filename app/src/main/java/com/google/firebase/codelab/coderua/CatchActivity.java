@@ -37,7 +37,7 @@ public class CatchActivity extends AppCompatActivity {
 
         /* We create an alert dialog here to be used below  */
         final AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage(R.string.catchMob + "\n" + "\t The mob is Ctos");
+        builder1.setMessage(R.string.catchMob + "\n" + "\t The mob is" +  MobsHolder.getInstance(this).getMobById(mobID).getName());
         builder1.setCancelable(true);
 
         builder1.setPositiveButton(
@@ -88,5 +88,4 @@ public class CatchActivity extends AppCompatActivity {
         //When finish() is called, this is the method that is executed imediately afterwards
         notActive = true;
     }
-
 }
