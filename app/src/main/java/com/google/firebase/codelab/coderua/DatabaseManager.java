@@ -23,7 +23,16 @@ public class DatabaseManager {
                 String name = "";
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     if(ds.child("email").getValue(String.class).equals(displayEmail)) {
-                        user = new User(ds.child("name").getValue(String.class), displayEmail, ds.child("level").getValue(Integer.class), ds.child("nmobs").getValue(Integer.class), ds.child("mobsCaught").getValue(ArrayList.class), ds.child("proximity").getValue(Integer.class), ds.child("rarerate").getValue(Integer.class), ds.child("range").getValue(Integer.class), ds.child("percentage").getValue(Integer.class), ds.child("updateAvailable").getValue(Integer.class));
+                        user = new User(ds.child("name").getValue(String.class)
+                                , displayEmail
+                                , ds.child("level").getValue(Integer.class)
+                                , ds.child("nmobs").getValue(Integer.class)
+                                , ds.child("mobsCaught").getValue(ArrayList.class)
+                                , ds.child("proximity").getValue(Integer.class)
+                                , ds.child("rarerate").getValue(Integer.class)
+                                , ds.child("range").getValue(Integer.class)
+                                , ds.child("percentage").getValue(Integer.class)
+                                , ds.child("updateAvailable").getValue(Integer.class));
                         break;
                     }
                 }

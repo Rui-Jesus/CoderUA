@@ -23,7 +23,7 @@ public class User {
         this.email = email;
         level = 1;
         nmobs = 3; //minimo
-        mobsCaught = new ArrayList<>(); //ainda nao apanhou nenhum
+        mobsCaught = new ArrayList<Integer>(); //ainda nao apanhou nenhum
         proximity = 250;
         rarerate = 5;
         range = 5;
@@ -94,6 +94,8 @@ public class User {
     public ArrayList<Integer> getMobsCaught() { return mobsCaught; }
 
     public void setMobsCaught(ArrayList<Integer> mobsCaught) { this.mobsCaught = mobsCaught; }
+
+    public void addModCaught(int mobID) { mobsCaught.add(mobID); }
 
     public int getProximity() { return proximity; }
 

@@ -41,6 +41,7 @@ public class LocationService extends Service {
 
     private String mLastUpdateTime;
     private Random rand;
+    private int tryCatch = 0;
 
     /*Variables for location updates*/
     private FusedLocationProviderClient mFusedLocationClient;
@@ -115,7 +116,7 @@ public class LocationService extends Service {
 
             while(true){
 
-                checkDistance(0.3, 0.050, 0.020); //300 meters | 50 meters | 20 meters
+                checkDistance(0.3, 0.090, 0.070); //300 meters | 50 meters | 20 meters
                 //Running this thread non-stop is quite heavy, and once checkDisntance is ran, we don´t need to immediately start again
                 try {
                     Thread.sleep(3500); //wait 3.5 seconds at the end of each turn
@@ -166,7 +167,7 @@ public class LocationService extends Service {
 
                 //We got a new point, we want to generate a new position around it
                 //The double will be an argument but for now is static. It's represented in KM
-                generateCoords(mCurrentLocation, 275); //175 meters around the location
+                generateCoords(mCurrentLocation, 100); //175 meters around the location
 
             }
         };
@@ -348,7 +349,10 @@ public class LocationService extends Service {
                     Intent intent = new Intent(LocationService.this, CatchActivity.class);
                     intent.putExtra("mobID", mob.getMobID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplication().startActivity(intent);
+                    if(! (tryCatch > 3)) {
+                        getApplication().startActivity(intent);
+                        tryCatch++;
+                    }
                     //The mob was caught, we want to remove it from the list
                     needsRemoval = true;
                     nRemoved++;
