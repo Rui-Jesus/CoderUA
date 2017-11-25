@@ -26,7 +26,7 @@ public class User {
         mobsCaught = new ArrayList<Integer>(); //ainda nao apanhou nenhum
         proximity = 250;
         rarerate = 5;
-        range = 5;
+        range = 15; //range to catch a mob. Because google is somewhat inprecise, we give this a wide margin
         percentage = 0;
         upgradeAvailable = 0;
     }

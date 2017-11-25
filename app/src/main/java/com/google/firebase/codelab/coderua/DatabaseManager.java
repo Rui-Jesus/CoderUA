@@ -4,6 +4,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -23,11 +24,13 @@ public class DatabaseManager {
                 String name = "";
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     if(ds.child("email").getValue(String.class).equals(displayEmail)) {
+                        //Firebase shenanigans
+                        GenericTypeIndicator<ArrayList<Integer>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Integer>>() {};
                         user = new User(ds.child("name").getValue(String.class)
                                 , displayEmail
                                 , ds.child("level").getValue(Integer.class)
                                 , ds.child("nmobs").getValue(Integer.class)
-                                , ds.child("mobsCaught").getValue(ArrayList.class)
+                                , ds.child("mobsCaught").getValue(genericTypeIndicator)
                                 , ds.child("proximity").getValue(Integer.class)
                                 , ds.child("rarerate").getValue(Integer.class)
                                 , ds.child("range").getValue(Integer.class)
@@ -35,9 +38,11 @@ public class DatabaseManager {
                                 , ds.child("updateAvailable").getValue(Integer.class));
                         break;
                     }
+                    DataHolder.getInstance().setCurrentUser(user);
                 }
                 if(name.equals(""))
                     createUser(displayName, displayEmail);
+                DataHolder.getInstance().setCurrentUser(user);
                 mainClass.fillLayout();
             }
 

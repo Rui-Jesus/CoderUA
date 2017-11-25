@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CoderUA</string>
+    <string name="catchMob" translatable="false">Tu apanhaste um monstro</string>
+    <string name="complete_activity" translatable="false">Completa a atividade seguinte</string>
+    <string name="default_info_title" translatable="false">Localização pre-definida</string>
+    <string name="drag" translatable="false">Arrasta o teu dedo</string>
+    <string name="monster_nearby" translatable="false">Um monstro está perto</string>
+    <string name="points_string" translatable="false">Numero de monstros apresentados</string>
+    <string name="range_string" translatable="false">Distância para capturar</string>
+    <string name="rate_string" translatable="false">Geração de raros</string>
+    <string name="shake" translatable="false">Abana o telemóvel</string>
+    <string name="spawn_string" translatable="false">Distância dos monstros</string>
+    <string name="tap" translatable="false">Clique depressa</string>
+    <string name="using_google" translatable="false">Usando Google</string>
+    <string name="welcome_msg" translatable="false">Bem Vindo!</string>
+    <string name="wild_programmer" translatable="false">Um programador selvagem apareceu !</string>
+</resources>

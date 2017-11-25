@@ -173,9 +173,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in.
-        // TODO: Add code to check if user is signed in.
-        /* Start the service responsible for getting location updates */
+        //If the user already gave permissions, the start above won't launch
         if(!serviceLaunched) {
             Intent intent = new Intent(this, LocationService.class);
             this.startService(intent);
@@ -200,7 +198,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     protected void logoutClick(View v){
-        //implementar logout
+        mFirebaseAuth.signOut();
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+        mUsername = ANONYMOUS;
+        //We want to stop the running service
+        stopService(new Intent(MainActivity.this, LocationService.class));
+        startActivity(new Intent(this, SignInActivity.class));
+        finish();
     }
 
     @Override
@@ -226,28 +230,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.sign_out_menu:
-                mFirebaseAuth.signOut();
-                Auth.GoogleSignInApi.signOut(mGoogleApiClient);
-                mUsername = ANONYMOUS;
-                startActivity(new Intent(this, SignInActivity.class));
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         // An unresolvable error has occurred and Google APIs (including Sign-In) will not
         // be available.
@@ -258,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     public void fillLayout() {
         DataHolder.getInstance().setCurrentUser(DatabaseManager.getUser());
         ProgressBar bar = findViewById(R.id.levelBar);
-        int percentage  =DataHolder.getInstance().getCurrentUser().getPercentage();
+        int percentage = DataHolder.getInstance().getCurrentUser().getPercentage();
         bar.setProgress(percentage);
         TextView level = findViewById(R.id.level);
         level.setText(R.string.level+ DataHolder.getInstance().getCurrentUser().getLevel());
@@ -267,6 +249,5 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Button pressed = findViewById(R.id.home);
         pressed.setTextColor(Color.parseColor("#000000"));
     }
-
 
 }

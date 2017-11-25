@@ -116,10 +116,11 @@ public class LocationService extends Service {
 
             while(true){
 
-                checkDistance(0.3, 0.090, 0.070); //300 meters | 50 meters | 20 meters
+                //User user = DatabaseManager.getUser();
+                checkDistance(0.3, 0.090, 15); //300 meters | 90 meters | range to catch mob
                 //Running this thread non-stop is quite heavy, and once checkDisntance is ran, we don´t need to immediately start again
                 try {
-                    Thread.sleep(3500); //wait 3.5 seconds at the end of each turn
+                    Thread.sleep(4500); //wait 4.5 seconds at the end of each turn
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -167,8 +168,9 @@ public class LocationService extends Service {
 
                 //We got a new point, we want to generate a new position around it
                 //The double will be an argument but for now is static. It's represented in KM
-                generateCoords(mCurrentLocation, 100); //175 meters around the location
-
+                //generateCoords(mCurrentLocation,
+                //        DatabaseManager.getUser().getProximity()); //Proximity comes in meters
+                generateCoords(mCurrentLocation, 175);
             }
         };
     }
@@ -217,7 +219,7 @@ public class LocationService extends Service {
     public void generateCoords(Location location, double radius){
 
         //We only want to have 3 locations being displayed at a time
-        //The number will be an argument in the future
+        //int maxMobs = DataHolder.getInstance().getCurrentUser().getNmobs();
         if(listOfMobs.size() < 5){
 
             Random random = new Random();
@@ -326,8 +328,9 @@ public class LocationService extends Service {
                         .setSmallIcon(R.mipmap.app_launcher)
                         .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
                                 R.mipmap.app_launcher))
-                        .setContentTitle("Monster near by !!!")
-                        .setContentText("A wild programmer has appeared")
+
+                        .setContentTitle(getResources().getString(R.string.monster_nearby))
+                        .setContentText(getResources().getString(R.string.wild_programmer))
                         .setSound(uri)
                         .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
                         //.setContentIntent(pendingIntent);
@@ -349,10 +352,8 @@ public class LocationService extends Service {
                     Intent intent = new Intent(LocationService.this, CatchActivity.class);
                     intent.putExtra("mobID", mob.getMobID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    if(! (tryCatch > 3)) {
-                        getApplication().startActivity(intent);
-                        tryCatch++;
-                    }
+                    getApplication().startActivity(intent);
+
                     //The mob was caught, we want to remove it from the list
                     needsRemoval = true;
                     nRemoved++;
@@ -380,13 +381,6 @@ public class LocationService extends Service {
 
     private double degreesToRadians(double degrees) {
         return degrees * Math.PI / 180;
-    }
-
-    private void removeMobFromList(Mob mob){
-        for(int i = 0; i<listOfMobs.size(); i++){
-            if(listOfMobs.get(i).equals(mob))
-                listOfMobs.remove(i);
-        }
     }
 
 }
