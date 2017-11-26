@@ -15,4 +15,7 @@
     <string name="using_google" translatable="false">Usando Google</string>
     <string name="welcome_msg" translatable="false">Bem Vindo!</string>
     <string name="wild_programmer" translatable="false">Um programador selvagem apareceu !</string>
+    <string name="mob_is" translatable="false">O monstro é</string>
+    <string name="you_caught_a_monster" translatable="false">Tu apanhaste um monstro !</string>
+    <string name="hold" translatable="false">Pressione o monstro</string>
 </resources>

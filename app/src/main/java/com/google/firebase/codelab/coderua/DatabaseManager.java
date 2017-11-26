@@ -44,6 +44,7 @@ public class DatabaseManager {
                     createUser(displayName, displayEmail);
                 DataHolder.getInstance().setCurrentUser(user);
                 mainClass.fillLayout();
+                updateBD(new User("hello", "hello!!"));
             }
 
             @Override
@@ -63,6 +64,6 @@ public class DatabaseManager {
     }
 
     static void updateBD (User userToUpdate){
-        database.child("Users").child("" + userToUpdate.getEmail().hashCode()).updateChildren(user.getMap());
+        database.child("Users").child("" + userToUpdate.getEmail().hashCode()).setValue(userToUpdate.getMap());
     }
 }

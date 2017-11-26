@@ -11,12 +11,16 @@
     <string name="complete_activity" translatable="false">Complete the following activity</string>
     <string name="monster_nearby" translatable="false">Monster near by !!!</string>
     <string name="wild_programmer" translatable="false">A wild programmer has appeared</string>
+    <string name="mob_is" translatable="false">The mob is</string>
+    <string name="you_caught_a_monster" translatable="false">You caught a monster</string>
+
 
 
     <!-- User actions -->
     <string name="shake" translatable="false">Shake your phone</string>
     <string name="tap" translatable="false">Tap fast</string>
     <string name="drag" translatable="false">Drag your finger</string>
+    <string name="hold" translatable="false">Hold the mob</string>
 
     <!-- Messages -->
     <string name="catchMob" translatable="false">You caught a monster</string>

@@ -117,7 +117,7 @@ public class LocationService extends Service {
             while(true){
 
                 //User user = DatabaseManager.getUser();
-                checkDistance(0.3, 0.090, 15); //300 meters | 90 meters | range to catch mob
+                checkDistance(0.3, 0.090, 0.015); //300 meters | 90 meters | range to catch mob
                 //Running this thread non-stop is quite heavy, and once checkDisntance is ran, we don´t need to immediately start again
                 try {
                     Thread.sleep(4500); //wait 4.5 seconds at the end of each turn
@@ -168,9 +168,9 @@ public class LocationService extends Service {
 
                 //We got a new point, we want to generate a new position around it
                 //The double will be an argument but for now is static. It's represented in KM
-                //generateCoords(mCurrentLocation,
-                //        DatabaseManager.getUser().getProximity()); //Proximity comes in meters
-                generateCoords(mCurrentLocation, 175);
+                generateCoords(mCurrentLocation,
+                        DatabaseManager.getUser().getProximity()); //Proximity comes in meters
+                //generateCoords(mCurrentLocation, 175);
             }
         };
     }

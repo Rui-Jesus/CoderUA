@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item android:state_enabled="true">
         <shape android:shape="oval">
-            <solid android:color="#a1a1a1"/>
+            <solid android:color="#55ec5d"/>
             <size
-                android:width="120dp"
-                android:height="120dp"/>
+                android:width="100dp"
+                android:height="100dp"/>
         </shape>
     </item>
+
     <item android:state_enabled="false">
         <shape android:shape="oval">
-            <solid android:color="#a1a1a1"/>
+            <solid android:color="#60a970"/>
             <size
-                android:width="120dp"
-                android:height="120dp"/>
-            <stroke android:color="#000000"
-                android:width="2dp"></stroke>
+                android:width="100dp"
+                android:height="100dp" />
+            <!--
+             <stroke android:color="#000000"
+                android:width="2dp">
+            </stroke>
+            -->
         </shape>
     </item>
 </selector>

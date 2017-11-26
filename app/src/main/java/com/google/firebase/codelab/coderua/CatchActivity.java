@@ -2,42 +2,54 @@ package com.google.firebase.codelab.coderua;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.provider.ContactsContract;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.Random;
 
 public class CatchActivity extends AppCompatActivity {
 
-    //To count the taps
-    public int nTaps;
+    public static String TAG = "CatchActivity";
+
+    private static final int CLICK_DURATION = 1000; //This comes in miliseconds.
 
     //To mark if this activity is still running
     static boolean notActive = true;
 
     private ImageView iv;
+    private TextView tv;
+    private int action;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //App booted, it's active
+        notActive = false;
+
         setContentView(R.layout.activity_catch);
 
         final int mobID = getIntent().getIntExtra("mobID", 0);
         iv = (ImageView)findViewById(R.id.myView);
+        tv = (TextView)findViewById(R.id.action);
+
         iv.setImageBitmap(MobsHolder.getInstance(this).getMobById(mobID).getImage());
 
-        //App booted, it's active
-        notActive = false;
+        double r = Math.random();
 
-        nTaps = 0;
+        //Depending on the action, we tell the user which activity to do, and set the action flag to select behaviour below.
+        if(r > 0.5) { action = 0; tv.setText(getResources().getString(R.string.hold));}
+        else{action = 1;}
 
         /* We create an alert dialog here to be used below  */
         final AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-        builder1.setMessage(R.string.catchMob + "\n" + "\t The mob is" +  MobsHolder.getInstance(this).getMobById(mobID).getName());
+        builder1.setMessage( getResources().getString(R.string.you_caught_a_monster) +
+                "\n" +
+                "\t " +  getResources().getString(R.string.mob_is) + " " +
+                MobsHolder.getInstance(this).getMobById(mobID).getName());
         builder1.setCancelable(true);
 
         builder1.setPositiveButton(
@@ -69,15 +81,40 @@ public class CatchActivity extends AppCompatActivity {
                 });
 
         iv.setOnTouchListener(new View.OnTouchListener() {
+            int nTaps = 0; //To record the number of times the user taps the screen
+            double t1 = 0; double t2 = 0; //To record the press and release time in case of long click
+
             public boolean onTouch(View v, MotionEvent event) {
-                // ... Respond to touch events
-                nTaps++;
-                if(nTaps == 4){
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
+
+                //We want tap events
+                if(action == 0){
+                    nTaps++;
+                    if(nTaps == 4) {
+                        AlertDialog alert11 = builder1.create();
+                        alert11.show();
+                    }
+
+                }
+                //We want long click events
+                else if(action == 1){
+                    switch (event.getAction()) {
+
+                        case MotionEvent.ACTION_DOWN: //We record the time he clicks on the screen
+                            t1 = System.currentTimeMillis();
+
+                        case MotionEvent.ACTION_UP:
+                            t2 = System.currentTimeMillis();
+
+                            if ((t2 - t1) >= CLICK_DURATION){
+                                double aux = t2-t1;
+                                AlertDialog alert11 = builder1.create();
+                                alert11.show();
+                            }
+                    }
                 }
                 return true;
             }
+
         });
 
     }
