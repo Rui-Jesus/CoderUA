@@ -15,7 +15,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/level"/>
+                android:id="@+id/levelText"
+                android:text="@string/level"/>
             <ProgressBar
                 android:id="@+id/levelBar"
                 style="?android:attr/progressBarStyleHorizontal"

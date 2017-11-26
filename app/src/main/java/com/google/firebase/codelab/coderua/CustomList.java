@@ -1,6 +1,7 @@
 package com.google.firebase.codelab.coderua;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,13 +9,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class CustomList extends ArrayAdapter<String>{
 
     private final Activity context;
-    private final String[] web;
-    private final Integer[] imageId;
+    private final ArrayList<String> web;
+    private final ArrayList<Bitmap> imageId;
     public CustomList(Activity context,
-                      String[] web, Integer[] imageId) {
+                      ArrayList<String> web, ArrayList<Bitmap> imageId) {
         super(context, R.layout.list_single, web);
         this.context = context;
         this.web = web;
@@ -28,9 +31,9 @@ public class CustomList extends ArrayAdapter<String>{
         TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
-        txtTitle.setText(web[position]);
+        txtTitle.setText(web.get(position));
 
-        imageView.setImageResource(imageId[position]);
+        imageView.setImageBitmap(imageId.get(position));
         return rowView;
     }
 }

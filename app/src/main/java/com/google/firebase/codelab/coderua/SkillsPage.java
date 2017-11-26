@@ -43,8 +43,9 @@ public class SkillsPage extends AppCompatActivity {
         nmobsBar.setProgress(nmobs);
         TextView infoMobs = findViewById(R.id.pointsInfo);
         infoMobs.setText(nmobs + "/8");
-        TextView level = findViewById(R.id.level);
-        level.setText(R.string.level+DataHolder.getInstance().getCurrentUser().getLevel());
+        TextView level = findViewById(R.id.levelText);
+        String text = level.getText() + "" + DataHolder.getInstance().getCurrentUser().getLevel();
+        level.setText(text);
         TextView username = findViewById(R.id.username);
         username.setText(DataHolder.getInstance().getCurrentUser().getUid());
         Button pressed = findViewById(R.id.skills);
@@ -103,6 +104,7 @@ public class SkillsPage extends AppCompatActivity {
         infoRate.setText(rare + "/25");
         int updatesAvailable = DataHolder.getInstance().getCurrentUser().getUpgradeAvailable();
         DataHolder.getInstance().getCurrentUser().setUpgradeAvailable(updatesAvailable--);
+        DatabaseManager.updateBD(DataHolder.getInstance().getCurrentUser());
     }
 
     protected void proximity(View v){
@@ -114,6 +116,7 @@ public class SkillsPage extends AppCompatActivity {
         DataHolder.getInstance().getCurrentUser().setProximity(prox);
         int updatesAvailable = DataHolder.getInstance().getCurrentUser().getUpgradeAvailable();
         DataHolder.getInstance().getCurrentUser().setUpgradeAvailable(updatesAvailable--);
+        DatabaseManager.updateBD(DataHolder.getInstance().getCurrentUser());
     }
 
     protected void points(View v){
@@ -125,6 +128,7 @@ public class SkillsPage extends AppCompatActivity {
         DataHolder.getInstance().getCurrentUser().setNmobs(nmobs);
         int updatesAvailable = DataHolder.getInstance().getCurrentUser().getUpgradeAvailable();
         DataHolder.getInstance().getCurrentUser().setUpgradeAvailable(updatesAvailable--);
+        DatabaseManager.updateBD(DataHolder.getInstance().getCurrentUser());
     }
 
     protected void range(View v){
@@ -136,5 +140,6 @@ public class SkillsPage extends AppCompatActivity {
         DataHolder.getInstance().getCurrentUser().setRange(range);
         int updatesAvailable = DataHolder.getInstance().getCurrentUser().getUpgradeAvailable();
         DataHolder.getInstance().getCurrentUser().setUpgradeAvailable(updatesAvailable--);
+        DatabaseManager.updateBD(DataHolder.getInstance().getCurrentUser());
     }
 }

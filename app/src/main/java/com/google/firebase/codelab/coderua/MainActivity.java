@@ -49,11 +49,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     //Google api variables
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private boolean canFillLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        canFillLayout = true;
 
         serviceLaunched = false;
 
@@ -76,9 +78,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
             }
         }
-
-        TextView textView = (TextView) findViewById(R.id.textView);
-        textView.setText(mUsername);
 
         //When the user logs in, we set him up
         DatabaseManager.setUser(this, mFirebaseUser.getEmail(), mUsername);
@@ -210,16 +209,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     public void fillLayout() {
-        DataHolder.getInstance().setCurrentUser(DatabaseManager.getUser());
-        ProgressBar bar = findViewById(R.id.levelBar);
-        int percentage = DataHolder.getInstance().getCurrentUser().getPercentage();
-        bar.setProgress(percentage);
-        TextView level = findViewById(R.id.level);
-        level.setText(R.string.level+ DataHolder.getInstance().getCurrentUser().getLevel());
-        TextView username = findViewById(R.id.username);
-        username.setText(DataHolder.getInstance().getCurrentUser().getUid());
-        Button pressed = findViewById(R.id.home);
-        pressed.setTextColor(Color.parseColor("#000000"));
+        if (canFillLayout) {
+            DataHolder.getInstance().setCurrentUser(DatabaseManager.getUser());
+            ProgressBar bar = findViewById(R.id.levelBar);
+            int percentage = DataHolder.getInstance().getCurrentUser().getPercentage();
+            bar.setProgress(percentage);
+            TextView level = findViewById(R.id.levelText);
+            String text = level.getText() + "" + DataHolder.getInstance().getCurrentUser().getLevel();
+            level.setText(text);
+            TextView username = findViewById(R.id.username);
+            username.setText(DataHolder.getInstance().getCurrentUser().getUid());
+            TextView textView = (TextView) findViewById(R.id.textView);
+            textView.setText(mUsername);
+        }
+        canFillLayout = false;
     }
 
 }
