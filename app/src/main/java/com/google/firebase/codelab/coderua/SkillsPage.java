@@ -110,7 +110,7 @@ public class SkillsPage extends AppCompatActivity {
             range.setEnabled(false);
         }
 
-        b.setEnabled(true);
+        //b.setEnabled(true);
 
     }
 
