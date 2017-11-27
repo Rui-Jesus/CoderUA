@@ -23,12 +23,15 @@ public class SkillsPage extends AppCompatActivity {
     private int auxProx;
     private int auxSpawn;
     private CharSequence txt;
+    private Button b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_skills_page);
         ProgressBar proximity = findViewById(R.id.proximityBar);
+
+        /*Next wall of code is to set up all the progress bars*/
         user = DataHolder.getInstance().getCurrentUser();
         int prox = 250-user.getProximity();
         auxProx = prox;
@@ -37,11 +40,13 @@ public class SkillsPage extends AppCompatActivity {
         infoProx.setText(prox + "/250");
         ProgressBar bar = findViewById(R.id.levelBar);
         int percentage = user.getPercentage();
+
         if (percentage == -1){
             bar.setProgress(0);
         } else {
             bar.setProgress(percentage);
         }
+
         int range = user.getRange();
         auxRange = range;
         ProgressBar rangeBar = findViewById(R.id.rangeBar);
@@ -74,9 +79,10 @@ public class SkillsPage extends AppCompatActivity {
         String newtxt=txt.toString()+" "+auxPtsToSpend;
         ptsSpend.setText(newtxt);
         checkLevel();
-        Button b = findViewById(R.id.saveButton);
-        b.setVisibility(View.VISIBLE);
-        b.setEnabled(true);
+        b = findViewById(R.id.saveButton);
+        //User hasn´t spend any points yet, he cannot see nor use this button
+        b.setVisibility(View.GONE);
+        b.setEnabled(false);
     }
 
     private void checkLevel(){
@@ -103,6 +109,9 @@ public class SkillsPage extends AppCompatActivity {
             Button range = findViewById(R.id.prox);
             range.setEnabled(false);
         }
+
+        b.setEnabled(true);
+
     }
 
     protected void goToHome(View v){
@@ -121,12 +130,18 @@ public class SkillsPage extends AppCompatActivity {
     }
 
     private void toDB(){
-        User user = DataHolder.getInstance().getCurrentUser();
+
+        /* The user might not have spend all the points we need to check that */
+        int tempauxPtsToSpend = user.getUpgradeAvailable();
+        user.setUpgradeAvailable(auxPtsToSpend);
+
+        auxPtsToSpend = auxPtsToSpend - tempauxPtsToSpend;
+
         user.setRarerate(auxSpawn);
         user.setProximity(auxProx);
         user.setNmobs(auxPts);
-        user.setUpgradeAvailable(auxPtsToSpend);
         user.setRange(auxRange);
+
         DataHolder.getInstance().setCurrentUser(user);
         DatabaseManager.updateBD(user);
         Button b = findViewById(R.id.saveButton);
@@ -212,7 +227,6 @@ public class SkillsPage extends AppCompatActivity {
     }
 
     private void restoreData() {
-        User user = DataHolder.getInstance().getCurrentUser();
         auxPts = user.getNmobs();
         ProgressBar nmobsBar = findViewById(R.id.pointsBar);
         nmobsBar.setProgress(auxPts);
@@ -228,6 +242,9 @@ public class SkillsPage extends AppCompatActivity {
         auxSpawn = user.getRarerate();
         ProgressBar rateBar = findViewById(R.id.spawnBar);
         rateBar.setProgress(auxSpawn);
+
+        Button b = findViewById(R.id.saveButton);
+        b.setVisibility(View.GONE);
 
     }
 }

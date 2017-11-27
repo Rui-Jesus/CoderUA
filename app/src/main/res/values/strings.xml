@@ -2,6 +2,7 @@
 
     <!-- App related Strings -->
     <string name="app_name">CoderUA</string>
+    <string name="welcome_page">Coder UA</string>
     <string name="welcome_msg" translatable="false">Welcome!</string>
     <string name="sign_out">Sign Out</string>
     <string name="sign_in">Sign In</string>
@@ -42,7 +43,7 @@
 
     <string name="pts">Upgrades available: </string>
     <string name="save">Save</string>
-    <string name="question">Are you shure you want to make the upgrades added?</string>
+    <string name="question">Are you sure you want to make the upgrades added?</string>
 
     <!--Strings for skills page-->
     <string name="skills_menu">Skills Menu</string>
