@@ -352,6 +352,7 @@ public class MapsActivity2 extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        //drawMarkers();
     }
 
     @Override

@@ -17,7 +17,7 @@ public class DataHolder {
     private String mLastUpdateTime;
     private ArrayList<Mob> listOfMobs;
     private ArrayList<Mob> mobsToRemove;
-    private User currentUser;
+    private static User currentUser;
 
     /* Structure that stores in memory all mobs of the app
      * In theory this is the most efficient way given the device has the memory for it

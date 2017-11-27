@@ -146,8 +146,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onStart();
         //If the user already gave permissions, the start above won't launch
         if(!serviceLaunched) {
-            Intent intent = new Intent(this, LocationService.class);
-            this.startService(intent);
+            //Intent intent = new Intent(this, LocationService.class);
+            //this.startService(intent);
         }
 
     }
@@ -210,17 +210,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     public void fillLayout() {
         if (canFillLayout) {
-            DataHolder.getInstance().setCurrentUser(DatabaseManager.getUser());
+            User user = DataHolder.getInstance().getCurrentUser();
             ProgressBar bar = findViewById(R.id.levelBar);
-            int percentage = DataHolder.getInstance().getCurrentUser().getPercentage();
+            int percentage = user.getPercentage();
             bar.setProgress(percentage);
             TextView level = findViewById(R.id.levelText);
-            String text = level.getText() + "" + DataHolder.getInstance().getCurrentUser().getLevel();
-            level.setText(text);
+            level.setText("Lv: " + user.getLevel());
             TextView username = findViewById(R.id.username);
-            username.setText(DataHolder.getInstance().getCurrentUser().getUid());
+            username.setText(user.getUid());
             TextView textView = (TextView) findViewById(R.id.textView);
             textView.setText(mUsername);
+            if(!serviceLaunched) {
+                Intent intent = new Intent(this, LocationService.class);
+                this.startService(intent);
+            }
         }
         canFillLayout = false;
     }

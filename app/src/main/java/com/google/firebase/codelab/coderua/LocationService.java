@@ -42,6 +42,7 @@ public class LocationService extends Service {
     private String mLastUpdateTime;
     private Random rand;
     private int tryCatch = 0;
+    private User currentUser;
 
     /*Variables for location updates*/
     private FusedLocationProviderClient mFusedLocationClient;
@@ -64,7 +65,8 @@ public class LocationService extends Service {
         super.onCreate();
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         listOfMobs = new ArrayList<>();
-
+        currentUser = DataHolder.getInstance().getCurrentUser();
+        Log.i(TAG, "HELLO " + currentUser.toString());
         mLastUpdateTime = "";
         rand = new Random();
         mobCount = 0;
@@ -117,7 +119,7 @@ public class LocationService extends Service {
             while(true){
 
                 //User user = DatabaseManager.getUser();
-                checkDistance(0.3, 0.090, 0.015); //300 meters | 90 meters | range to catch mob
+                checkDistance(0.3, 0.090, 1); //300 meters | 90 meters | range to catch mob
                 //Running this thread non-stop is quite heavy, and once checkDisntance is ran, we don´t need to immediately start again
                 try {
                     Thread.sleep(4500); //wait 4.5 seconds at the end of each turn
@@ -169,7 +171,7 @@ public class LocationService extends Service {
                 //We got a new point, we want to generate a new position around it
                 //The double will be an argument but for now is static. It's represented in KM
                 generateCoords(mCurrentLocation,
-                        DatabaseManager.getUser().getProximity()); //Proximity comes in meters
+                        currentUser.getProximity()); //Proximity comes in meters
                 //generateCoords(mCurrentLocation, 175);
             }
         };
@@ -353,7 +355,7 @@ public class LocationService extends Service {
                     intent.putExtra("mobID", mob.getMobID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     getApplication().startActivity(intent);
-
+                    //updateUser(mob.getMobID());
                     //The mob was caught, we want to remove it from the list
                     needsRemoval = true;
                     nRemoved++;
@@ -381,6 +383,28 @@ public class LocationService extends Service {
 
     private double degreesToRadians(double degrees) {
         return degrees * Math.PI / 180;
+    }
+
+    private void updateUser(int mobID){
+        //The user caught a mob, we will give it new xp and check if he leveled up.
+        int percentage = currentUser.getPercentage();
+        //For now, he always receives 20% xp
+        percentage += 20;
+
+        currentUser.addModCaught(mobID);
+        if(percentage>100){ //He leveled up
+            percentage = percentage - 100; //Percentage that remains
+            currentUser.setLevel(currentUser.getLevel() + 1); //Got a level
+            currentUser.setUpgradeAvailable(currentUser.getUpgradeAvailable() + 1); //Got a new point to spend
+        }
+        currentUser.setPercentage(percentage);
+
+        Log.i(TAG, "User caught a mob sending to database " + currentUser.toString());
+
+        //We update the DataHolder
+        DataHolder.getInstance().setCurrentUser(currentUser);
+        //We update the dataBase
+        DatabaseManager.updateBD(currentUser);
     }
 
 }

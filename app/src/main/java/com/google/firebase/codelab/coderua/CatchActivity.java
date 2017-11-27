@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -41,8 +42,8 @@ public class CatchActivity extends AppCompatActivity {
         double r = Math.random();
 
         //Depending on the action, we tell the user which activity to do, and set the action flag to select behaviour below.
-        if(r > 0.5) { action = 0; tv.setText(getResources().getString(R.string.hold));}
-        else{action = 1;}
+        if(r > 0.5) { action = 1; tv.setText(getResources().getString(R.string.hold));}
+        else{action = 0;}
 
         /* We create an alert dialog here to be used below  */
         final AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
@@ -55,10 +56,8 @@ public class CatchActivity extends AppCompatActivity {
         builder1.setPositiveButton(
                 R.string.OK,
                 new DialogInterface.OnClickListener() {
+                    User user = DataHolder.getInstance().getCurrentUser();
                     public void onClick(DialogInterface dialog, int id) {
-
-                        //The user caught a mob, we will give it new xp and check if he leveled up.
-                        User user = DataHolder.getInstance().getCurrentUser();
                         int percentage = user.getPercentage();
                         //For now, he always receives 20% xp
                         percentage += 20;
@@ -68,7 +67,7 @@ public class CatchActivity extends AppCompatActivity {
                             user.setLevel(user.getLevel() + 1); //Got a level
                             user.setUpgradeAvailable(user.getUpgradeAvailable() + 1); //Got a new point to spend
                         }
-
+                        user.setPercentage(percentage);
                         //We update the DataHolder
                         DataHolder.getInstance().setCurrentUser(user);
                         //We update the dataBase

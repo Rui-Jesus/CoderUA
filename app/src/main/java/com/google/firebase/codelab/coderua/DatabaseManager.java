@@ -1,5 +1,7 @@
 package com.google.firebase.codelab.coderua;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,6 +26,7 @@ public class DatabaseManager {
                 String name = "";
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     if(ds.child("email").getValue(String.class).equals(displayEmail)) {
+                        name = displayName;
                         //Firebase shenanigans
                         GenericTypeIndicator<ArrayList<Integer>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<Integer>>() {};
                         user = new User(ds.child("name").getValue(String.class)
@@ -36,15 +39,15 @@ public class DatabaseManager {
                                 , ds.child("range").getValue(Integer.class)
                                 , ds.child("percentage").getValue(Integer.class)
                                 , ds.child("updateAvailable").getValue(Integer.class));
+                        DataHolder.getInstance().setCurrentUser(user);
                         break;
                     }
+                }
+                if(name.equals("")){
+                    createUser(displayName, displayEmail);
                     DataHolder.getInstance().setCurrentUser(user);
                 }
-                if(name.equals(""))
-                    createUser(displayName, displayEmail);
-                DataHolder.getInstance().setCurrentUser(user);
                 mainClass.fillLayout();
-                updateBD(new User("hello", "hello!!"));
             }
 
             @Override

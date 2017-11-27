@@ -62,12 +62,13 @@ public class CodexPage extends AppCompatActivity {
             }
 
         });
+        User user = DataHolder.getInstance().getCurrentUser();
         ProgressBar bar = findViewById(R.id.levelBar);
         TextView level = findViewById(R.id.levelText);
-        String text = level.getText() + "" + DataHolder.getInstance().getCurrentUser().getLevel();
+        String text = level.getText() + "" + user.getLevel();
         level.setText(text);
         TextView username = findViewById(R.id.username);
-        username.setText(DataHolder.getInstance().getCurrentUser().getUid());
+        username.setText(user.getUid());
         Button pressed = findViewById(R.id.codex);
         pressed.setEnabled(false);
         pressed.setTextColor(Color.parseColor("#000000"));

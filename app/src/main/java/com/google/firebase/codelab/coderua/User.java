@@ -95,7 +95,11 @@ public class User {
 
     public void setMobsCaught(ArrayList<Integer> mobsCaught) { this.mobsCaught = mobsCaught; }
 
-    public void addModCaught(int mobID) { mobsCaught.add(mobID); }
+    public void addModCaught(int mobID) {
+        if(mobsCaught == null)
+            mobsCaught = new ArrayList<>();
+        mobsCaught.add(mobID);
+    }
 
     public int getProximity() { return proximity; }
 
