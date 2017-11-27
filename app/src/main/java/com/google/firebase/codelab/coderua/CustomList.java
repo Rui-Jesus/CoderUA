@@ -15,13 +15,13 @@ public class CustomList extends ArrayAdapter<String>{
 
     private final Activity context;
     private final ArrayList<String> web;
-    private final ArrayList<Bitmap> imageId;
+    private final ArrayList<Mob> mobs;
     public CustomList(Activity context,
-                      ArrayList<String> web, ArrayList<Bitmap> imageId) {
+                      ArrayList<String> web, ArrayList<Mob> mobs) {
         super(context, R.layout.list_single, web);
         this.context = context;
         this.web = web;
-        this.imageId = imageId;
+        this.mobs = mobs;
 
     }
     @Override
@@ -29,11 +29,15 @@ public class CustomList extends ArrayAdapter<String>{
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView= inflater.inflate(R.layout.list_single, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.txt);
-
+        TextView idTitle = (TextView) rowView.findViewById(R.id.mobinfo);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.img);
         txtTitle.setText(web.get(position));
-
-        imageView.setImageBitmap(imageId.get(position));
+        if (web.get(position).equals("??????")) {
+            idTitle.setText("???");
+        } else {
+            idTitle.setText("" + mobs.get(position).getMobID());
+        }
+        imageView.setImageBitmap(mobs.get(position).getImage());
         return rowView;
     }
 }

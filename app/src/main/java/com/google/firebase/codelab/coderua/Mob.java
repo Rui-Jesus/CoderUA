@@ -2,6 +2,7 @@ package com.google.firebase.codelab.coderua;
 
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.util.Log;
 
 /**
  * Created by ruigr on 20/11/2017.
@@ -92,6 +93,8 @@ public class Mob {
     public int getInternalId() { return internalId; }
 
     public void setInternalId(int id) { internalId = id; }
+
+    public String getType() { return type; }
 
     @Override
     public boolean equals(Object o) {

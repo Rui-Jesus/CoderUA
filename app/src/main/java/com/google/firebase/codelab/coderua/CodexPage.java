@@ -2,9 +2,7 @@ package com.google.firebase.codelab.coderua;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.Image;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,34 +22,67 @@ public class CodexPage extends AppCompatActivity {
 
 
     ListView list;
+    Mob popUpMob;
+    ArrayList<Mob> mobs1;
+    boolean isCaught;
+    HashMap<Integer, Integer> nmobscaught = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isCaught = true;
         setContentView(R.layout.activity_codex_page);
         HashMap<Integer, Mob> map = MobsHolder.getInstance(this).getAppMobs();
+        ArrayList<Integer> mobsCaught = DataHolder.getInstance().getCurrentUser().getMobsCaught();
         Set<Integer> mobs = map.keySet();
         ArrayList<String> web = new ArrayList<>();
-        ArrayList<Bitmap> images = new ArrayList<>();
+        mobs1 = new ArrayList<>();
+        boolean inList = false;
+        for (Integer i: mobsCaught) {
+            if (nmobscaught.containsKey(i)){
+                int n=nmobscaught.get(i);
+                nmobscaught.put(i, n++);
+            } else {
+                nmobscaught.put(i, 1);
+            }
+        }
         for (Iterator<Integer> it = mobs.iterator(); it.hasNext(); ) {
             int f = it.next();
-            Mob b = map.get(f);
-            web.add(b.getName());
-            images.add(b.getImage());
+            for (Integer i: mobsCaught) {
+                if (i==f) {
+                    inList = true;
+                    break;
+                }
+            }
+            if (inList){
+                Mob b = map.get(f);
+                web.add(b.getName());
+                mobs1.add(b);
+                inList = false;
+            } else {
+                Mob b = map.get(f);
+                web.add("??????");
+                mobs1.add(b);
+            }
+
         }
-        CustomList adapter = new CustomList(CodexPage.this, web, images);
+        final CustomList adapter = new CustomList(CodexPage.this, web, mobs1);
         list = findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                PopUp();
+                popUpMob = mobs1.get(i);
+                String a = adapter.getItem(i);
+                if (!a.equals("??????")){
+                    PopUp();
+                }
             }
 
             private void PopUp() {
                 AlertDialog alertDialog = new AlertDialog.Builder(CodexPage.this).create();
-                alertDialog.setTitle("Name of the mob");
-                alertDialog.setMessage("info to be shown");
+                alertDialog.setTitle(popUpMob.getName());
+                alertDialog.setMessage("Type: " + popUpMob.getType() + "\nNumber of mobs caught: " + nmobscaught.get(popUpMob.getMobID()));
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {

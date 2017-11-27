@@ -8,9 +8,18 @@
             android:id="@+id/img"
             android:layout_width="64dp"
             android:layout_height="64dp"/>
-            <TextView
-                android:id="@+id/txt"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"/>
+        <TextView
+            android:id="@+id/txt"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/mobinfo"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginRight="8dp"/>
     </TableRow>
 </TableLayout>
