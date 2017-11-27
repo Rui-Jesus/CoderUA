@@ -18,4 +18,7 @@
     <string name="mob_is" translatable="false">O monstro é</string>
     <string name="you_caught_a_monster" translatable="false">Tu apanhaste um monstro !</string>
     <string name="hold" translatable="false">Pressione o monstro</string>
+    <string name="pts">Melhoramentos ainda possíveis: </string>
+    <string name="save">Gravar</string>
+    <string name="question">Tem a certeza que pretende gravar os upgrades?</string>
 </resources>

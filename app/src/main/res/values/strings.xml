@@ -40,6 +40,10 @@
     <!--String for topbar-->
     <string name="level">Lv. </string>
 
+    <string name="pts">Upgrades available: </string>
+    <string name="save">Save</string>
+    <string name="question">Are you shure you want to make the upgrades added?</string>
+
     <!--Strings for skills page-->
     <string name="skills_menu">Skills Menu</string>
     <string name="spawn_string" translatable="false">Spawning distance</string>
