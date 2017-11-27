@@ -10,11 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Random;
-
 public class CatchActivity extends AppCompatActivity {
 
-    public static String TAG = "CatchActivity";
+    private static final String TAG = "CatchActivity";
 
     private static final int CLICK_DURATION = 1000; //This comes in miliseconds.
 

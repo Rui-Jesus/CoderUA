@@ -70,6 +70,7 @@ public class MapsActivity2 extends AppCompatActivity
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
+    private static final String MARKERS = "markers";
 
 
     @Override
@@ -80,6 +81,7 @@ public class MapsActivity2 extends AppCompatActivity
         if (savedInstanceState != null) {
             mCurrentLocation = savedInstanceState.getParcelable(KEY_LOCATION);
             mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+            //mapOfMarkers = (HashMap) savedInstanceState.getSerializable(MARKERS);
         }
 
         // Retrieve the content view that renders the map.
@@ -237,6 +239,7 @@ public class MapsActivity2 extends AppCompatActivity
         if (mMap != null) {
             outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
             outState.putParcelable(KEY_LOCATION, mCurrentLocation);
+            //outState.putSerializable(MARKERS, mapOfMarkers);
             super.onSaveInstanceState(outState);
         }
     }

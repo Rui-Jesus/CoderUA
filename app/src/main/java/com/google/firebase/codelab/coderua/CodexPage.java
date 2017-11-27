@@ -3,6 +3,7 @@ package com.google.firebase.codelab.coderua;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,11 +22,12 @@ import java.util.Set;
 public class CodexPage extends AppCompatActivity {
 
 
-    ListView list;
-    Mob popUpMob;
-    ArrayList<Mob> mobs1;
-    boolean isCaught;
-    HashMap<Integer, Integer> nmobscaught = new HashMap<>();
+    private ListView list;
+    private Mob popUpMob;
+    private ArrayList<Mob> mobs1;
+    private boolean isCaught;
+    private HashMap<Integer, Integer> nmobscaught = new HashMap<>();
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +35,8 @@ public class CodexPage extends AppCompatActivity {
         isCaught = true;
         setContentView(R.layout.activity_codex_page);
         HashMap<Integer, Mob> map = MobsHolder.getInstance(this).getAppMobs();
-        ArrayList<Integer> mobsCaught = DataHolder.getInstance().getCurrentUser().getMobsCaught();
+        user = DataHolder.getInstance().getCurrentUser();
+        ArrayList<Integer> mobsCaught = user.getMobsCaught();
         Set<Integer> mobs = map.keySet();
         ArrayList<String> web = new ArrayList<>();
         mobs1 = new ArrayList<>();
@@ -93,7 +96,6 @@ public class CodexPage extends AppCompatActivity {
             }
 
         });
-        User user = DataHolder.getInstance().getCurrentUser();
         ProgressBar bar = findViewById(R.id.levelBar);
         TextView level = findViewById(R.id.levelText);
         String text = level.getText() + "" + user.getLevel();

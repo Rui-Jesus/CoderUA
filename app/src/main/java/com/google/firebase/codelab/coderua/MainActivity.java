@@ -218,8 +218,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             level.setText("Lv: " + user.getLevel());
             TextView username = findViewById(R.id.username);
             username.setText(user.getUid());
-            TextView textView = (TextView) findViewById(R.id.textView);
-            textView.setText(mUsername);
             if(!serviceLaunched) {
                 Intent intent = new Intent(this, LocationService.class);
                 this.startService(intent);

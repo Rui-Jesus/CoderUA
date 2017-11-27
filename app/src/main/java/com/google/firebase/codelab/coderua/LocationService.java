@@ -41,7 +41,6 @@ public class LocationService extends Service {
 
     private String mLastUpdateTime;
     private Random rand;
-    private int tryCatch = 0;
     private User currentUser;
 
     /*Variables for location updates*/
@@ -66,7 +65,7 @@ public class LocationService extends Service {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         listOfMobs = new ArrayList<>();
         currentUser = DataHolder.getInstance().getCurrentUser();
-        Log.i(TAG, "HELLO " + currentUser.toString());
+
         mLastUpdateTime = "";
         rand = new Random();
         mobCount = 0;
@@ -99,7 +98,6 @@ public class LocationService extends Service {
             locationThread.start();
 
         return START_STICKY;
-        //return START_NOT_STICKY;
     }
 
     /**
@@ -117,9 +115,7 @@ public class LocationService extends Service {
             }
 
             while(true){
-
-                //User user = DatabaseManager.getUser();
-                checkDistance(0.3, 0.090, 1); //300 meters | 90 meters | range to catch mob
+                checkDistance(0.3, 0.090, currentUser.getRange()/1000); //300 meters | 90 meters | range to catch mob
                 //Running this thread non-stop is quite heavy, and once checkDisntance is ran, we don´t need to immediately start again
                 try {
                     Thread.sleep(4500); //wait 4.5 seconds at the end of each turn
@@ -169,10 +165,8 @@ public class LocationService extends Service {
                 sendLocationBroadcast(intent, mCurrentLocation, null, 0);
 
                 //We got a new point, we want to generate a new position around it
-                //The double will be an argument but for now is static. It's represented in KM
                 generateCoords(mCurrentLocation,
                         currentUser.getProximity()); //Proximity comes in meters
-                //generateCoords(mCurrentLocation, 175);
             }
         };
     }
@@ -222,7 +216,7 @@ public class LocationService extends Service {
 
         //We only want to have 3 locations being displayed at a time
         //int maxMobs = DataHolder.getInstance().getCurrentUser().getNmobs();
-        if(listOfMobs.size() < 5){
+        if(listOfMobs.size() < currentUser.getNmobs()){
 
             Random random = new Random();
             double radiusInDegrees = radius / 111000f;
