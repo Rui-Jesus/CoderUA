@@ -36,9 +36,11 @@ public class CodexPage extends AppCompatActivity {
         setContentView(R.layout.activity_codex_page);
         HashMap<Integer, Mob> map = MobsHolder.getInstance(this).getAppMobs();
         user = DataHolder.getInstance().getCurrentUser();
-        ArrayList<Integer> mobsCaught = user.getMobsCaught();
         Set<Integer> mobs = map.keySet();
         ArrayList<String> web = new ArrayList<>();
+        ArrayList<Integer> mobsCaught = user.getMobsCaught();
+        if(mobsCaught == null)
+            mobsCaught = new ArrayList<>();
         mobs1 = new ArrayList<>();
         boolean inList = false;
         for (Integer i: mobsCaught) {

@@ -5,7 +5,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
         android:orientation="horizontal"
         android:alpha="0.7"
         android:background="@color/colorAccent">
@@ -34,6 +34,7 @@
             android:layout_weight="1"/>
         <TextView
             android:id="@+id/username"
+            android:fontFamily="monospace"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

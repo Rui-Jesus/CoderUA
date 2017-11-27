@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final String TAG = "MainActivity";
     private GoogleApiClient mGoogleApiClient;
 
-    private boolean serviceLaunched;
+    private static boolean serviceLaunched;
 
     //By the default, the username is anonymous
     public static final String ANONYMOUS = "anonymous";
