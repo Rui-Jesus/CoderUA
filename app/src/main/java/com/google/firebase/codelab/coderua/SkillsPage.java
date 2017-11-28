@@ -54,19 +54,19 @@ public class SkillsPage extends AppCompatActivity {
         int range = user.getRange();
         auxRange = range;
         ProgressBar rangeBar = findViewById(R.id.rangeBar);
-        rangeBar.setProgress(range);
+        rangeBar.setProgress(range-15);
         TextView infoRange = findViewById(R.id.rangeInfo);
         infoRange.setText(range + "/25");
         int rate = user.getRarerate();
         auxSpawn = rate;
         ProgressBar rateBar = findViewById(R.id.spawnBar);
-        rateBar.setProgress(rate);
+        rateBar.setProgress(rate-5);
         TextView infoRate = findViewById(R.id.rareInfo);
         infoRate.setText(rate + "/25");
         int nmobs = user.getNmobs();
         auxPts = nmobs;
         ProgressBar nmobsBar = findViewById(R.id.pointsBar);
-        nmobsBar.setProgress(nmobs);
+        nmobsBar.setProgress(nmobs-3);
         TextView infoMobs = findViewById(R.id.pointsInfo);
         infoMobs.setText(nmobs + "/8");
         TextView level = findViewById(R.id.levelText);
@@ -146,11 +146,7 @@ public class SkillsPage extends AppCompatActivity {
     private void toDB(){
 
         /* The user might not have spend all the points we need to check that */
-        int tempauxPtsToSpend = user.getUpgradeAvailable();
         user.setUpgradeAvailable(auxPtsToSpend);
-
-        auxPtsToSpend = auxPtsToSpend - tempauxPtsToSpend;
-
         user.setRarerate(auxSpawn);
         user.setProximity(auxProx);
         user.setNmobs(auxPts);
@@ -168,9 +164,10 @@ public class SkillsPage extends AppCompatActivity {
         Button b = findViewById(R.id.saveButton);
         b.setVisibility(View.VISIBLE);
         TextView ptsSpend = findViewById(R.id.stringpts);
-        ptsSpend.setText(txt+" "+auxPtsToSpend);
+        String newtxt=txt.toString()+" "+auxPtsToSpend;
+        ptsSpend.setText(newtxt);
         ProgressBar rateBar = findViewById(R.id.spawnBar);
-        rateBar.setProgress(auxSpawn);
+        rateBar.setProgress(auxSpawn-5);
         TextView infoRate = findViewById(R.id.rareInfo);
         infoRate.setText(auxSpawn + "/25");
         checkLevel();
@@ -183,7 +180,8 @@ public class SkillsPage extends AppCompatActivity {
         Button b = findViewById(R.id.saveButton);
         b.setVisibility(View.VISIBLE);
         TextView ptsSpend = findViewById(R.id.stringpts);
-        ptsSpend.setText(txt+" "+auxPtsToSpend);
+        String newtxt=txt.toString()+" "+auxPtsToSpend;
+        ptsSpend.setText(newtxt);
         proximity.setProgress(auxProx);
         TextView infoProx = findViewById(R.id.spawnInfo);
         infoProx.setText(auxProx + "/250");
@@ -196,9 +194,10 @@ public class SkillsPage extends AppCompatActivity {
         Button b = findViewById(R.id.saveButton);
         b.setVisibility(View.VISIBLE);
         TextView ptsSpend = findViewById(R.id.stringpts);
-        ptsSpend.setText(txt+" "+auxPtsToSpend);
+        String newtxt=txt.toString()+" "+auxPtsToSpend;
+        ptsSpend.setText(newtxt);
         ProgressBar nmobsBar = findViewById(R.id.pointsBar);
-        nmobsBar.setProgress(auxPts);
+        nmobsBar.setProgress(auxPts-3);
         TextView infoMobs = findViewById(R.id.pointsInfo);
         infoMobs.setText(auxPts + "/8");
         checkLevel();
@@ -210,9 +209,10 @@ public class SkillsPage extends AppCompatActivity {
         Button b = findViewById(R.id.saveButton);
         b.setVisibility(View.VISIBLE);
         TextView ptsSpend = findViewById(R.id.stringpts);
-        ptsSpend.setText(txt+" "+auxPtsToSpend);
+        String newtxt=txt.toString()+" "+auxPtsToSpend;
+        ptsSpend.setText(newtxt);
         ProgressBar rangeBar = findViewById(R.id.rangeBar);
-        rangeBar.setProgress(auxRange);
+        rangeBar.setProgress(auxRange-15);
         TextView infoRange = findViewById(R.id.rangeInfo);
         infoRange.setText(auxRange + "/25");
         checkLevel();
@@ -225,6 +225,7 @@ public class SkillsPage extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         toDB();
+                        checkLevel();
                         dialog.dismiss();
                     }
                 });
@@ -243,19 +244,20 @@ public class SkillsPage extends AppCompatActivity {
     private void restoreData() {
         auxPts = user.getNmobs();
         ProgressBar nmobsBar = findViewById(R.id.pointsBar);
-        nmobsBar.setProgress(auxPts);
+        nmobsBar.setProgress(auxPts-3);
         auxPtsToSpend = user.getUpgradeAvailable();
         TextView ptsSpend = findViewById(R.id.stringpts);
-        ptsSpend.setText(txt+" "+auxPtsToSpend);
+        String newtxt=txt.toString()+" "+auxPtsToSpend;
+        ptsSpend.setText(newtxt);
         auxRange = user.getRange();
         ProgressBar rangeBar = findViewById(R.id.rangeBar);
-        rangeBar.setProgress(auxRange);
+        rangeBar.setProgress(auxRange-15);
         auxProx = user.getProximity();
         ProgressBar proximity = findViewById(R.id.proximityBar);
         proximity.setProgress(auxProx);
         auxSpawn = user.getRarerate();
         ProgressBar rateBar = findViewById(R.id.spawnBar);
-        rateBar.setProgress(auxSpawn);
+        rateBar.setProgress(auxSpawn-5);
 
         Button b = findViewById(R.id.saveButton);
         b.setVisibility(View.GONE);
