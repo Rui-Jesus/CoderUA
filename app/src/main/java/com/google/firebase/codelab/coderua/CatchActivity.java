@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class CatchActivity extends AppCompatActivity {
@@ -22,6 +23,7 @@ public class CatchActivity extends AppCompatActivity {
     private ImageView iv;
     private TextView tv;
     private int action;
+    private ProgressBar progBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,8 @@ public class CatchActivity extends AppCompatActivity {
         final int mobID = getIntent().getIntExtra("mobID", 0);
         iv = (ImageView)findViewById(R.id.myView);
         tv = (TextView)findViewById(R.id.action);
+        progBar = (ProgressBar)findViewById(R.id.progressBar);
+        progBar.setVisibility(View.INVISIBLE);
 
         iv.setImageBitmap(MobsHolder.getInstance(this).getMobById(mobID).getImage());
 
@@ -42,6 +46,7 @@ public class CatchActivity extends AppCompatActivity {
         //Depending on the action, we tell the user which activity to do, and set the action flag to select behaviour below.
         if(r > 0.5) { action = 1; tv.setText(getResources().getString(R.string.hold));}
         else{action = 0;}
+        action = 0; //Testing stuff
 
         /* We create an alert dialog here to be used below  */
         final AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
@@ -88,6 +93,16 @@ public class CatchActivity extends AppCompatActivity {
                     }
                 });
 
+        //Set up progress bar
+        progBar.setVisibility(View.VISIBLE);
+
+        if(action == 0){
+            progBar.setMax(4);
+        }
+        else{
+            progBar.setMax(CLICK_DURATION);
+        }
+
         iv.setOnTouchListener(new View.OnTouchListener() {
             int nTaps = 0; //To record the number of times the user taps the screen
             double t1 = 0; double t2 = 0; //To record the press and release time in case of long click
@@ -97,6 +112,7 @@ public class CatchActivity extends AppCompatActivity {
                 //We want tap events
                 if(action == 0){
                     nTaps++;
+                    progBar.setProgress(progBar.getProgress() + 1);
                     if(nTaps == 4) {
                         AlertDialog alert11 = builder1.create();
                         alert11.show();
@@ -112,6 +128,8 @@ public class CatchActivity extends AppCompatActivity {
 
                         case MotionEvent.ACTION_UP:
                             t2 = System.currentTimeMillis();
+                            double d = Math.ceil(t2-t1);
+                            progBar.setProgress((int)(d));
 
                             if ((t2 - t1) >= CLICK_DURATION){
                                 double aux = t2-t1;

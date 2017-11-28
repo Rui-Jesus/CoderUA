@@ -30,6 +30,15 @@
         android:textStyle="bold"
         android:text="@string/welcome_page" />
 
+    <Button
+        android:id="@+id/testButton"
+        android:text="Test Catch"
+        android:onClick="callCatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="75dp"/>
+
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="match_parent"

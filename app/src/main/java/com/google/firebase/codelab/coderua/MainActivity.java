@@ -179,6 +179,13 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         finish();
     }
 
+    //We're simulating a mob catch, the mob in this case is Ctos
+    protected void callCatch(View v){
+        Intent intent = new Intent(this, CatchActivity.class);
+        intent.putExtra("mobID", 100);
+        startActivity(intent);
+    }
+
     @Override
     public void onPause() {
         if (mAdView != null)
