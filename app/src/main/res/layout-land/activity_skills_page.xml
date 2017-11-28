@@ -50,10 +50,15 @@
 
         <ProgressBar
             android:id="@+id/proximityBar"
-            style="?android:attr/progressBarStyle"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:max="100"
+            android:secondaryProgress="100"
+            android:indeterminate="false"
+            android:layout_centerInParent="true"
+            android:progressDrawable="@drawable/circular_bar"/>
 
         <TextView
             android:textAlignment="center"
@@ -69,7 +74,7 @@
             android:layout_height="24dp"
             android:background="@drawable/plus"
             android:onClick="proximity"
-            android:layout_gravity="center"/>/>
+            android:layout_gravity="center"/>
 
     </LinearLayout>
 
@@ -96,10 +101,15 @@
 
         <ProgressBar
             android:id="@+id/pointsBar"
-            style="?android:attr/progressBarStyle"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:max="5"
+            android:secondaryProgress="5"
+            android:indeterminate="false"
+            android:layout_centerInParent="true"
+            android:progressDrawable="@drawable/circular_bar"/>
 
         <TextView
             android:textAlignment="center"
@@ -142,10 +152,15 @@
 
         <ProgressBar
             android:id="@+id/spawnBar"
-            style="?android:attr/progressBarStyle"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:max="20"
+            android:secondaryProgress="20"
+            android:indeterminate="false"
+            android:layout_centerInParent="true"
+            android:progressDrawable="@drawable/circular_bar"/>
 
         <TextView
             android:textAlignment="center"
@@ -187,10 +202,15 @@
 
         <ProgressBar
             android:id="@+id/rangeBar"
-            style="?android:attr/progressBarStyle"
+            style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:max="10"
+            android:secondaryProgress="10"
+            android:indeterminate="false"
+            android:layout_centerInParent="true"
+            android:progressDrawable="@drawable/circular_bar"/>
 
         <TextView
             android:textAlignment="center"

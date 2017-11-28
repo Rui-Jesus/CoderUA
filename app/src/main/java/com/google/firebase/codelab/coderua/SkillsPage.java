@@ -2,12 +2,15 @@ package com.google.firebase.codelab.coderua;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.RotateDrawable;
 import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -26,64 +29,65 @@ public class SkillsPage extends AppCompatActivity {
     private int auxPts;
     private int auxProx;
     private int auxSpawn;
+    private int percentage;
     private CharSequence txt;
     private Button b;
+    private static final String SPAWN_DATA = "spawn";
+    private static final String POINTS_DATA = "points";
+    private static final String RANGE_DATA = "range";
+    private static final String PROX_DATA = "prox";
 
     @Override
     protected void onSaveInstanceState(Bundle onState) {
-
+        onState.putInt(SPAWN_DATA, auxSpawn);
+        onState.putInt(POINTS_DATA, auxPts);
+        onState.putInt(RANGE_DATA, auxRange);
+        onState.putInt(PROX_DATA, auxProx);
         super.onSaveInstanceState(onState);
     }
 
+    protected void onRestoreInstanceState(Bundle onState) {
+        super.onRestoreInstanceState(onState);
+        auxPts = onState.getInt(POINTS_DATA);
+        auxProx = onState.getInt(PROX_DATA);
+        auxSpawn = onState.getInt(SPAWN_DATA);
+        auxRange = onState.getInt(RANGE_DATA);
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_skills_page);
+    protected void onResume(){
+        super.onResume();
+        fillLayout();
+    }
+
+    private void fillLayout() {
         ProgressBar proximity = findViewById(R.id.proximityBar);
-
         /*Next wall of code is to set up all the progress bars*/
-        user = DataHolder.getInstance().getCurrentUser();
-        int prox = 250-user.getProximity();
-        auxProx = prox;
-        proximity.setProgress(prox);
+        proximity.setProgress(auxProx);
         TextView infoProx = findViewById(R.id.spawnInfo);
-        infoProx.setText(prox + "/250");
+        infoProx.setText(auxProx + "/250");
         ProgressBar bar = findViewById(R.id.levelBar);
-        int percentage = user.getPercentage();
-
-        if (percentage == -1){
-            bar.setProgress(0);
-        } else {
-            bar.setProgress(percentage);
-        }
-
-        int range = user.getRange();
-        auxRange = range;
+        bar.setProgress(percentage);
         ProgressBar rangeBar = findViewById(R.id.rangeBar);
-        rangeBar.setProgress(range-15);
+        rangeBar.setProgress(auxRange-15);
         TextView infoRange = findViewById(R.id.rangeInfo);
-        infoRange.setText(range + "/25");
-        int rate = user.getRarerate();
-        auxSpawn = rate;
+        infoRange.setText(auxRange + "/25");
         ProgressBar rateBar = findViewById(R.id.spawnBar);
-        rateBar.setProgress(rate-5);
+        rateBar.setProgress(auxSpawn-5);
         TextView infoRate = findViewById(R.id.rareInfo);
-        infoRate.setText(rate + "/25");
-        int nmobs = user.getNmobs();
-        auxPts = nmobs;
+        infoRate.setText(auxSpawn + "/25");
         ProgressBar nmobsBar = findViewById(R.id.pointsBar);
-        nmobsBar.setProgress(nmobs-3);
+        nmobsBar.setProgress(auxPts-3);
         TextView infoMobs = findViewById(R.id.pointsInfo);
-        infoMobs.setText(nmobs + "/8");
+        infoMobs.setText(auxPts + "/8");
         TextView level = findViewById(R.id.levelText);
-        String text = level.getText() + "" + DataHolder.getInstance().getCurrentUser().getLevel();
+        String text = level.getText() + "" + user.getLevel();
         level.setText(text);
         TextView username = findViewById(R.id.username);
-        username.setText(DataHolder.getInstance().getCurrentUser().getUid());
+        username.setText(user.getUid());
         Button pressed = findViewById(R.id.skills);
         pressed.setEnabled(false);
         pressed.setTextColor(Color.parseColor("#000000"));
-        auxPtsToSpend = DataHolder.getInstance().getCurrentUser().getUpgradeAvailable();
         TextView ptsSpend = findViewById(R.id.stringpts);
         txt=ptsSpend.getText();
         String newtxt=txt.toString()+" "+auxPtsToSpend;
@@ -92,6 +96,20 @@ public class SkillsPage extends AppCompatActivity {
         b = findViewById(R.id.saveButton);
         //User hasn´t spend any points yet, he cannot see nor use this button
         b.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_skills_page);
+        user = DataHolder.getInstance().getCurrentUser();
+        auxProx  = 250-user.getProximity();
+        percentage = user.getPercentage();
+        auxRange = user.getRange();
+        auxSpawn = user.getRarerate();
+        auxPts = user.getNmobs();
+        auxPtsToSpend = user.getUpgradeAvailable();
+
     }
 
     private void checkLevel(){
@@ -264,7 +282,6 @@ public class SkillsPage extends AppCompatActivity {
         auxSpawn = user.getRarerate();
         ProgressBar rateBar = findViewById(R.id.spawnBar);
         rateBar.setProgress(auxSpawn-5);
-
         Button b = findViewById(R.id.saveButton);
         b.setVisibility(View.GONE);
 

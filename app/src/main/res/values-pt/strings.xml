@@ -6,7 +6,7 @@
     <string name="default_info_title" translatable="false">Localização pre-definida</string>
     <string name="drag" translatable="false">Arrasta o teu dedo</string>
     <string name="monster_nearby" translatable="false">Um monstro está perto</string>
-    <string name="points_string" translatable="false">Numero de monstros apresentados</string>
+    <string name="points_string" translatable="false">Monstros extra no mapa</string>
     <string name="range_string" translatable="false">Distância para capturar</string>
     <string name="rate_string" translatable="false">Geração de raros</string>
     <string name="shake" translatable="false">Abana o telemóvel</string>
@@ -16,8 +16,8 @@
     <string name="welcome_msg" translatable="false">Bem Vindo!</string>
     <string name="wild_programmer" translatable="false">Um programador selvagem apareceu !</string>
     <string name="mob_is" translatable="false">O monstro é</string>
-    <string name="you_caught_a_monster" translatable="false">Tu apanhaste um monstro !</string>
-    <string name="hold" translatable="false">Pressione o monstro</string>
+    <string name="you_caught_a_monster" translatable="false">Apanhaste um monstro !</string>
+    <string name="hold" translatable="false">Pressiona o monstro</string>
     <string name="pts">Melhoramentos ainda possíveis: </string>
     <string name="save">Gravar</string>
     <string name="question">Tem a certeza que pretende gravar os upgrades?</string>
