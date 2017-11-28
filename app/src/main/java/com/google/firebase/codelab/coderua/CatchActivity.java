@@ -57,8 +57,19 @@ public class CatchActivity extends AppCompatActivity {
                     User user = DataHolder.getInstance().getCurrentUser();
                     public void onClick(DialogInterface dialog, int id) {
                         int percentage = user.getPercentage();
-                        //For now, he always receives 20% xp
-                        percentage += 20;
+
+                        //If the user is low leveled, he levels up fast
+                        if(user.getLevel()<=5)
+                            percentage += 50;
+
+                        //If the user is between 5 and 10, receives 100 - n * 30
+                        //Where n is in % 100 - level * 3
+                        if(5 < user.getLevel() && user.getLevel() <= 10)
+                            percentage += Math.abs(1- 3*user.getLevel() * 30);
+
+                        if(user.getLevel() > 10)
+                            percentage += Math.abs(1- 2*user.getLevel() * 20);
+
                         user.addModCaught(mobID);
                         if(percentage>=100){ //He leveled up
                             percentage = percentage - 100; //Percentage that remains

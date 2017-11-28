@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.TreeSet;
 
 
 /**
@@ -46,8 +47,6 @@ public class LocationService extends Service {
     public static final String ACTION2 = "NEW_LOCATION";
     public static final String ACTION3 = "LIST_CHANGED";
 
-    private int try2 = 0;
-
     private String mLastUpdateTime;
     private Random rand;
     private User currentUser;
@@ -58,10 +57,13 @@ public class LocationService extends Service {
     private LocationCallback mLocationCallback;
     private LocationRequest mLocationRequest;
     private ArrayList<Mob> listOfMobs;
+
+    //User related variables for the logic
     private int mobCount; //To give unique internal ids to the mobs created
     private int range;
     private int proximity;
     private int nMobs;
+    private int rarity;
 
     //To access the database
     private static DatabaseReference database = FirebaseDatabase.getInstance().getReference();
@@ -86,6 +88,7 @@ public class LocationService extends Service {
         proximity = currentUser.getProximity();
         range = currentUser.getRange();
         nMobs = currentUser.getNmobs();
+        rarity = currentUser.getRarerate();
 
         //Set up a listener for this user in particular
         ref = database.child("Users").child(""+currentUser.getEmail().hashCode());
@@ -135,6 +138,8 @@ public class LocationService extends Service {
                 public void onDataChange(DataSnapshot ds) {
                     proximity = ds.child("proximity").getValue(Integer.class);
                     range = ds.child("range").getValue(Integer.class);
+                    rarity = ds.child("rarerate").getValue(Integer.class);
+                    nMobs = ds.child("nmobs").getValue(Integer.class);
                 }
 
                 @Override
@@ -165,7 +170,7 @@ public class LocationService extends Service {
             startListening(); //We want to start listening for updates
 
             while(true){
-                checkDistance(0.3, 0.090, 1000/1000); //300 meters | 90 meters | range to catch mob
+                checkDistance(0.3, 0.090, range/1000); //300 meters | 90 meters | range to catch mob
                 //Running this thread non-stop is quite heavy, and once checkDisntance is ran, we don´t need to immediately start again
                 try {
                     Thread.sleep(4500); //wait 4.5 seconds at the end of each turn
@@ -309,10 +314,24 @@ public class LocationService extends Service {
     private Mob generateMob(){
 
         HashMap<Integer, Mob> mobDict = MobsHolder.getInstance(this).getAppMobs();
-        int aux = mobDict.size();
+        TreeSet<Integer> rareMobs = MobsHolder.getInstance(this).getRareMobsIds();
+        TreeSet<Integer> commonMobs = MobsHolder.getInstance(this).getCommonMobsIds();
 
-        int randomNum = rand.nextInt(aux);
-        int id = (int) mobDict.keySet().toArray()[randomNum];
+        boolean flagRare = false;
+        //This is to calculate if we get a rare mob, or a common mob
+        double r = Math.random();
+        if(rarity/100 > r)
+            flagRare = true;
+
+        int id = 0;
+        if(!flagRare){
+            int randomNum = rand.nextInt(commonMobs.size());
+            id = (int) mobDict.keySet().toArray()[randomNum];
+        }
+        else{
+            int randomNum = rand.nextInt(rareMobs.size());
+            id = (int) mobDict.keySet().toArray()[randomNum];
+        }
 
         Mob mob = mobDict.get(id);
         mob.setInternalId(mobCount++);
@@ -397,14 +416,10 @@ public class LocationService extends Service {
                     Intent intent = new Intent(LocationService.this, CatchActivity.class);
                     intent.putExtra("mobID", mob.getMobID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    if(!(try2 > 4))
-                        getApplication().startActivity(intent);
-                    try2++;
-                    //updateUser(mob.getMobID());
+                    getApplication().startActivity(intent);
                     //The mob was caught, we want to remove it from the list
                     needsRemoval = true;
                     nRemoved++;
-                    //removeMobFromList(mob);
                     listOfMobs.remove(i);
                     mobsToRemove.add(mob);
                 }
@@ -428,28 +443,6 @@ public class LocationService extends Service {
 
     private double degreesToRadians(double degrees) {
         return degrees * Math.PI / 180;
-    }
-
-    private void updateUser(int mobID){
-        //The user caught a mob, we will give it new xp and check if he leveled up.
-        int percentage = currentUser.getPercentage();
-        //For now, he always receives 20% xp
-        percentage += 20;
-
-        currentUser.addModCaught(mobID);
-        if(percentage>100){ //He leveled up
-            percentage = percentage - 100; //Percentage that remains
-            currentUser.setLevel(currentUser.getLevel() + 1); //Got a level
-            currentUser.setUpgradeAvailable(currentUser.getUpgradeAvailable() + 1); //Got a new point to spend
-        }
-        currentUser.setPercentage(percentage);
-
-        Log.i(TAG, "User caught a mob sending to database " + currentUser.toString());
-
-        //We update the DataHolder
-        DataHolder.getInstance().setCurrentUser(currentUser);
-        //We update the dataBase
-        DatabaseManager.updateBD(currentUser);
     }
 
 }
