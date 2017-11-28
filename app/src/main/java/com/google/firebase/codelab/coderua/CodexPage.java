@@ -7,6 +7,7 @@ import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -51,6 +52,7 @@ public class CodexPage extends AppCompatActivity {
             if(i != null){
                 if (nmobscaught.containsKey(i)){
                     int n=nmobscaught.get(i);
+                    Log.i("N da porra:", String.valueOf(n));
                     nmobscaught.put(i, n++);
                 } else {
                     nmobscaught.put(i, 1);
