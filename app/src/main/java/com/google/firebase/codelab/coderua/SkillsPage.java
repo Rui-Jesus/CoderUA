@@ -38,6 +38,21 @@ public class SkillsPage extends AppCompatActivity {
     private static final String PROX_DATA = "prox";
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        canSave = false;
+        setContentView(R.layout.activity_skills_page);
+        user = DataHolder.getInstance().getCurrentUser();
+        auxProx  = 250-user.getProximity();
+        percentage = user.getPercentage();
+        auxRange = user.getRange();
+        auxSpawn = user.getRarerate();
+        auxPts = user.getNmobs();
+        auxPtsToSpend = user.getUpgradeAvailable();
+
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle onState) {
         onState.putInt(SPAWN_DATA, auxSpawn);
         onState.putInt(POINTS_DATA, auxPts);
@@ -101,21 +116,6 @@ public class SkillsPage extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        canSave = false;
-        setContentView(R.layout.activity_skills_page);
-        user = DataHolder.getInstance().getCurrentUser();
-        auxProx  = 250-user.getProximity();
-        percentage = user.getPercentage();
-        auxRange = user.getRange();
-        auxSpawn = user.getRarerate();
-        auxPts = user.getNmobs();
-        auxPtsToSpend = user.getUpgradeAvailable();
-
-    }
-
     private void checkLevel(){
         if (auxPtsToSpend==0) {
             Button points = findViewById(R.id.pts);
@@ -140,8 +140,6 @@ public class SkillsPage extends AppCompatActivity {
             Button range = findViewById(R.id.prox);
             range.setEnabled(false);
         }
-
-        //b.setEnabled(true);
 
     }
 
@@ -173,10 +171,10 @@ public class SkillsPage extends AppCompatActivity {
 
     private void toDB(){
 
-        /* The user might not have spend all the points we need to check that */
+        /* The user might not have spent all the points we need to check that */
         user.setUpgradeAvailable(auxPtsToSpend);
         user.setRarerate(auxSpawn);
-        user.setProximity(auxProx);
+        user.setProximity(user.getProximity() - auxProx);
         user.setNmobs(auxPts);
         user.setRange(auxRange);
 
@@ -204,7 +202,7 @@ public class SkillsPage extends AppCompatActivity {
 
     protected void proximity(View v){
         ProgressBar proximity = findViewById(R.id.proximityBar);
-        auxProx +=10;
+        auxProx +=10; //The mobs spawn closer the more points the user spends here
         auxPtsToSpend--;
         Button b = findViewById(R.id.saveButton);
         b.setVisibility(View.VISIBLE);
@@ -235,7 +233,7 @@ public class SkillsPage extends AppCompatActivity {
     }
 
     protected void range(View v){
-        auxRange++;
+        auxRange+=5;
         auxPtsToSpend--;
         Button b = findViewById(R.id.saveButton);
         b.setVisibility(View.VISIBLE);

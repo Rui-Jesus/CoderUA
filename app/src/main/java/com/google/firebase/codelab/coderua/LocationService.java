@@ -167,10 +167,10 @@ public class LocationService extends Service {
                 e.printStackTrace();
             }
 
-            //startListening(); //We want to start listening for updates
+            startListening(); //We want to start listening for updates
 
             while(true){
-                checkDistance(0.3, 0.090, 1000/1000); //300 meters | 90 meters | range to catch mob
+                checkDistance(0.3, 0.090, range/1000); //300 meters | 90 meters | range to catch mob
                 //Running this thread non-stop is quite heavy, and once checkDisntance is ran, we don´t need to immediately start again
                 try {
                     Thread.sleep(4500); //wait 4.5 seconds at the end of each turn

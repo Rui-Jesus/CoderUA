@@ -51,16 +51,15 @@ public class MapsActivity2 extends AppCompatActivity
     public static final String ACTION2 = "NEW_LOCATION";
     public static final String ACTION3 = "LIST_CHANGED";
 
+    private static boolean canDraw; //To control the drawMarkers()
+
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
     private Marker userMarker;
 
     private boolean firstTime;
     private HashMap<Integer,Marker> mapOfMarkers;
-
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
-    // not granted.
-    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private HashMap<MarkerOptions, String> mapOfOptions;
     private static final int DEFAULT_ZOOM = 15;
 
     // The geographical location where the device is currently located. That is, the last-known
@@ -88,21 +87,14 @@ public class MapsActivity2 extends AppCompatActivity
         setContentView(R.layout.activity_maps);
 
         firstTime = true;
+        canDraw = false;
         mapOfMarkers = new HashMap<>();
+        mapOfOptions = new HashMap<>();
 
         // Build the map.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapFragment);
         mapFragment.getMapAsync(this);
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mMessageReceiver, new IntentFilter(ACTION));
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mMessageReceiver2, new IntentFilter(ACTION2));
-
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mMessageReceiver3, new IntentFilter(ACTION3));
 
         /* The user cannot go back to this activity */
         Button pressed = (Button) findViewById(R.id.map);
@@ -127,15 +119,14 @@ public class MapsActivity2 extends AppCompatActivity
             locationReceived.setLongitude(currentLongitude);
 
             Log.i(TAG," onRecieve ACTION 1");
-            //mCurrentLocation = DataHolder.getInstance().getmCurrentLocation();
             mCurrentLocation = locationReceived;
-            if(firstTime){
+            if(userMarker == null){
                 firstTime = false;
                 MarkerOptions a = new MarkerOptions()
                         .position(new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude()))
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
                 userMarker = mMap.addMarker(a);
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(mMap.getCameraPosition().zoom));
             }
             else {
                 userMarker.setPosition(new LatLng(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude()));
@@ -186,8 +177,6 @@ public class MapsActivity2 extends AppCompatActivity
 
             double nToRemove = intent.getDoubleExtra("nToRemove", 0);
 
-            //We will run an Async task so that the ui doesn't slow down
-            //new MyAsyncTask().execute(nToRemove);
             for(Mob m: DataHolder.getInstance().getMobsToRemove()){
                 Marker marker = mapOfMarkers.get(m.getInternalId());
                 if(marker != null)
@@ -196,40 +185,6 @@ public class MapsActivity2 extends AppCompatActivity
             }
         }
     };
-
-    // The types specified here are the input data type, the progress type, and the result type
-    /**
-     * A private class to handle some quick jobs that the map needs. Used to prevent blocking the UI thread
-     */
-    private class MyAsyncTask extends AsyncTask<Double, Void, Void> {
-
-        ArrayList<Integer> indexesToRemove = new ArrayList<>();
-
-        protected void onPreExecute() {
-            // Runs on the UI thread before doInBackground
-            // Good for toggling visibility of a progress indicator
-            //progressBar.setVisibility(ProgressBar.VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(Double... doubles) {
-            // Some long-running task like downloading an image.
-
-            //double nToRemove = doubles[0];
-
-            return null;
-        }
-
-        protected void onProgressUpdate() {
-            // Executes whenever publishProgress is called from doInBackground
-            // Used to update the progress indicator
-        }
-
-        protected void onPostExecute() {
-            // This method is executed in the UIThread
-            // with access to the result of the long running task
-        }
-    }
 
     /**
      * Saves the state of the map when the activity is paused.
@@ -291,6 +246,15 @@ public class MapsActivity2 extends AppCompatActivity
         //Because the service may already created some points to represent, we need to to get them.
         //Once the map is up and ready to go, the other points will be caught by the broadcast receivers
         drawMarkers();
+        //Turn on boradcast receivers to receive mobs and location updates
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMessageReceiver, new IntentFilter(ACTION));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMessageReceiver2, new IntentFilter(ACTION2));
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMessageReceiver3, new IntentFilter(ACTION3));
 
     }
 
@@ -298,7 +262,8 @@ public class MapsActivity2 extends AppCompatActivity
         ArrayList<Mob> lst = DataHolder.getInstance().getListOfMobs();
 
         //The same code present in broadcast receiver 2
-        if(lst != null) { //The list might be empty, if the user opened this activity way too fast
+        if(lst != null && canDraw) { //The list might be empty, if the user opened this activity way too fast
+            Log.i(TAG, "Mobs to draw: " + lst.size());
             for (Mob mob : lst) {
                 MarkerOptions a = new MarkerOptions()
                         .position(new LatLng(mob.getLocation().getLatitude(), mob.getLocation().getLongitude()))
@@ -307,7 +272,6 @@ public class MapsActivity2 extends AppCompatActivity
                 mapOfMarkers.put(mob.getInternalId(), m);
             }
         }
-
     }
 
     /**
@@ -350,12 +314,15 @@ public class MapsActivity2 extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+        canDraw = true; //Next time this activity gets back it wants to draw
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //drawMarkers();
+        if(canDraw){
+            drawMarkers();
+        }
     }
 
     @Override

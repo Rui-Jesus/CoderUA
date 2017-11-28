@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CodexPage" >
+
+    <include layout="@layout/bottombar"/>
+
+    <include layout="@layout/topbar"
+        android:id="@+id/include"/>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="480dp"
+        android:layout_height="128dp"/>
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="134dp"
+        android:layout_height="39dp"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:text="Codex"/>
+
+
+</android.support.constraint.ConstraintLayout>
