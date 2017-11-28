@@ -30,6 +30,12 @@ public class SkillsPage extends AppCompatActivity {
     private Button b;
 
     @Override
+    protected void onSaveInstanceState(Bundle onState) {
+
+        super.onSaveInstanceState(onState);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_skills_page);
