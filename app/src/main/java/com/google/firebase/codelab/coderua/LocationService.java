@@ -20,6 +20,13 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -39,6 +46,8 @@ public class LocationService extends Service {
     public static final String ACTION2 = "NEW_LOCATION";
     public static final String ACTION3 = "LIST_CHANGED";
 
+    private int try2 = 0;
+
     private String mLastUpdateTime;
     private Random rand;
     private User currentUser;
@@ -50,6 +59,13 @@ public class LocationService extends Service {
     private LocationRequest mLocationRequest;
     private ArrayList<Mob> listOfMobs;
     private int mobCount; //To give unique internal ids to the mobs created
+    private int range;
+    private int proximity;
+    private int nMobs;
+
+    //To access the database
+    private static DatabaseReference database = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference ref;
 
     /* Support tools */
     private Thread locationThread;
@@ -66,6 +82,13 @@ public class LocationService extends Service {
         listOfMobs = new ArrayList<>();
         currentUser = DataHolder.getInstance().getCurrentUser();
 
+        //Set up user related variables, that will change on data change event from firebase
+        proximity = currentUser.getProximity();
+        range = currentUser.getRange();
+        nMobs = currentUser.getNmobs();
+
+        //Set up a listener for this user in particular
+        ref = database.child("Users").child(""+currentUser.getEmail().hashCode());
         mLastUpdateTime = "";
         rand = new Random();
         mobCount = 0;
@@ -101,6 +124,31 @@ public class LocationService extends Service {
     }
 
     /**
+     * Method to listen for data changes on firebase
+     */
+    private void startListening(){
+
+        if(ref != null) {
+
+            ValueEventListener eventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot ds) {
+                    proximity = ds.child("proximity").getValue(Integer.class);
+                    range = ds.child("range").getValue(Integer.class);
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.e(TAG, "Error on firebase");
+                }
+            };
+
+            ref.addValueEventListener(eventListener);
+
+        }
+    }
+
+    /**
      * Runnable object to implement some heavy code that could block the UI otherwise
      */
     private Runnable locationJob = new Runnable() {
@@ -114,8 +162,10 @@ public class LocationService extends Service {
                 e.printStackTrace();
             }
 
+            startListening(); //We want to start listening for updates
+
             while(true){
-                checkDistance(0.3, 0.090, currentUser.getRange()/1000); //300 meters | 90 meters | range to catch mob
+                checkDistance(0.3, 0.090, 1000/1000); //300 meters | 90 meters | range to catch mob
                 //Running this thread non-stop is quite heavy, and once checkDisntance is ran, we don´t need to immediately start again
                 try {
                     Thread.sleep(4500); //wait 4.5 seconds at the end of each turn
@@ -165,8 +215,7 @@ public class LocationService extends Service {
                 sendLocationBroadcast(intent, mCurrentLocation, null, 0);
 
                 //We got a new point, we want to generate a new position around it
-                generateCoords(mCurrentLocation,
-                        currentUser.getProximity()); //Proximity comes in meters
+                generateCoords(mCurrentLocation, proximity); //Proximity comes in meters
             }
         };
     }
@@ -216,7 +265,7 @@ public class LocationService extends Service {
 
         //We only want to have 3 locations being displayed at a time
         //int maxMobs = DataHolder.getInstance().getCurrentUser().getNmobs();
-        if(listOfMobs.size() < currentUser.getNmobs()){
+        if(listOfMobs.size() < nMobs){
 
             Random random = new Random();
             double radiusInDegrees = radius / 111000f;
@@ -348,7 +397,9 @@ public class LocationService extends Service {
                     Intent intent = new Intent(LocationService.this, CatchActivity.class);
                     intent.putExtra("mobID", mob.getMobID());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    getApplication().startActivity(intent);
+                    if(!(try2 > 4))
+                        getApplication().startActivity(intent);
+                    try2++;
                     //updateUser(mob.getMobID());
                     //The mob was caught, we want to remove it from the list
                     needsRemoval = true;

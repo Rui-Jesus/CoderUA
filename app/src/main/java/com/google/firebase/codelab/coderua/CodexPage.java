@@ -14,6 +14,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,12 +48,15 @@ public class CodexPage extends AppCompatActivity {
         mobs1 = new ArrayList<>();
         boolean inList = false;
         for (Integer i: mobsCaught) {
-            if (nmobscaught.containsKey(i)){
-                int n=nmobscaught.get(i);
-                nmobscaught.put(i, n++);
-            } else {
-                nmobscaught.put(i, 1);
+            if(i != null){
+                if (nmobscaught.containsKey(i)){
+                    int n=nmobscaught.get(i);
+                    nmobscaught.put(i, n++);
+                } else {
+                    nmobscaught.put(i, 1);
+                }
             }
+
         }
         for (Iterator<Integer> it = mobs.iterator(); it.hasNext(); ) {
             int f = it.next();
@@ -123,6 +130,17 @@ public class CodexPage extends AppCompatActivity {
     protected void goToMap(View v){
         Intent intent = new Intent(this, MapsActivity2.class);
         startActivity(intent);
+    }
+
+    protected void logoutClick(View v){
+        FirebaseAuth mFirebaseAuth = DataHolder.getInstance().getmFirebaseAuth();
+        GoogleApiClient mGoogleApiClient = DataHolder.getInstance().getmGoogleApiClient();
+        mFirebaseAuth.signOut();
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+        //We want to stop the running service
+        stopService(new Intent(CodexPage.this, LocationService.class));
+        startActivity(new Intent(this, SignInActivity.class));
+        finish();
     }
 
 }

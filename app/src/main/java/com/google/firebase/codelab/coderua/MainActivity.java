@@ -81,7 +81,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         //When the user logs in, we set him up
         DatabaseManager.setUser(this, mFirebaseUser.getEmail(), mUsername);
-
+        DataHolder.getInstance().setmFirebaseAuth(mFirebaseAuth);
+        DataHolder.getInstance().setmGoogleApiClient(mGoogleApiClient);
         /* To place the adds */
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();

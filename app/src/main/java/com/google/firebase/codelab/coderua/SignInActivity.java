@@ -124,6 +124,8 @@ public class SignInActivity extends AppCompatActivity implements
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         } else {
+                            DataHolder.getInstance().setmFirebaseAuth(mFirebaseAuth);
+                            DataHolder.getInstance().setmGoogleApiClient(mGoogleApiClient);
                             startActivity(new Intent(SignInActivity.this, MainActivity.class));
                             finish();
                         }

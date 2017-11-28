@@ -5,10 +5,10 @@ import android.graphics.BitmapFactory;
 
 import java.util.HashMap;
 
-/**
- * Created by ruigr on 22/11/2017.
+/**Structure that stores in memory all mobs of the app
+ * In theory this is the most efficient way given the device has the memory for it
+ * In a future implementation this could be stored in a local file, although on fast devices IO could become a bottleneck
  */
-
 public class MobsHolder {
 
     private static MobsHolder instance;

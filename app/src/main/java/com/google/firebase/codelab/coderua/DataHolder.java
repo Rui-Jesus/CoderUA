@@ -2,6 +2,9 @@ package com.google.firebase.codelab.coderua;
 
 import android.location.Location;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 
 /**
@@ -18,11 +21,8 @@ public class DataHolder {
     private ArrayList<Mob> listOfMobs;
     private ArrayList<Mob> mobsToRemove;
     private User currentUser;
-
-    /* Structure that stores in memory all mobs of the app
-     * In theory this is the most efficient way given the device has the memory for it
-      * In a future implementation this could be stored in a local file, although on fast devices IO could become a bottleneck*/
-
+    private FirebaseAuth mFirebaseAuth;
+    private GoogleApiClient mGoogleApiClient;
 
     public static synchronized DataHolder getInstance() {
         if (instance == null)
@@ -31,6 +31,14 @@ public class DataHolder {
     }
 
     private DataHolder() {
+    }
+
+    public GoogleApiClient getmGoogleApiClient() {
+        return mGoogleApiClient;
+    }
+
+    public void setmGoogleApiClient(GoogleApiClient mGoogleApiClient) {
+        this.mGoogleApiClient = mGoogleApiClient;
     }
 
 
@@ -65,4 +73,8 @@ public class DataHolder {
     public ArrayList<Mob> getMobsToRemove() { return mobsToRemove; }
 
     public void setMobsToRemove(ArrayList<Mob> lst){ mobsToRemove = lst; }
+
+    public void setmFirebaseAuth(FirebaseAuth auth) { mFirebaseAuth = auth; }
+
+    public FirebaseAuth getmFirebaseAuth() { return mFirebaseAuth; }
 }

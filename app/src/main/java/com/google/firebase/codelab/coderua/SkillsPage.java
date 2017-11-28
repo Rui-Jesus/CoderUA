@@ -13,6 +13,10 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
+
 public class SkillsPage extends AppCompatActivity {
 
     private User user;
@@ -82,7 +86,6 @@ public class SkillsPage extends AppCompatActivity {
         b = findViewById(R.id.saveButton);
         //User hasn´t spend any points yet, he cannot see nor use this button
         b.setVisibility(View.GONE);
-        b.setEnabled(false);
     }
 
     private void checkLevel(){
@@ -127,6 +130,17 @@ public class SkillsPage extends AppCompatActivity {
     protected void goToMap(View v){
         Intent intent = new Intent(this, MapsActivity2.class);
         startActivity(intent);
+    }
+
+    protected void logoutClick(View v){
+        FirebaseAuth mFirebaseAuth = DataHolder.getInstance().getmFirebaseAuth();
+        GoogleApiClient mGoogleApiClient = DataHolder.getInstance().getmGoogleApiClient();
+        mFirebaseAuth.signOut();
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient);
+        //We want to stop the running service
+        stopService(new Intent(SkillsPage.this, LocationService.class));
+        startActivity(new Intent(this, SignInActivity.class));
+        finish();
     }
 
     private void toDB(){

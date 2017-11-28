@@ -60,7 +60,7 @@ public class CatchActivity extends AppCompatActivity {
                         //For now, he always receives 20% xp
                         percentage += 20;
                         user.addModCaught(mobID);
-                        if(percentage>100){ //He leveled up
+                        if(percentage>=100){ //He leveled up
                             percentage = percentage - 100; //Percentage that remains
                             user.setLevel(user.getLevel() + 1); //Got a level
                             user.setUpgradeAvailable(user.getUpgradeAvailable() + 1); //Got a new point to spend
