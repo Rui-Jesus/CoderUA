@@ -115,9 +115,7 @@ public class User {
 
     public int getPercentage() { return percentage; }
 
-    public void setPercentage(int percentage) {
-        this.percentage = percentage;
-    }
+    public void setPercentage(int percentage) { this.percentage = percentage; }
 
     public int getUpgradeAvailable() {
         return upgradeAvailable;

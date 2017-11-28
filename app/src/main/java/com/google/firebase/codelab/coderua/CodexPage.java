@@ -3,7 +3,6 @@ package com.google.firebase.codelab.coderua;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class CodexPage extends AppCompatActivity {
-
 
     private ListView list;
     private Mob popUpMob;
@@ -108,6 +106,7 @@ public class CodexPage extends AppCompatActivity {
 
         });
         ProgressBar bar = findViewById(R.id.levelBar);
+        bar.setProgress(user.getPercentage());
         TextView level = findViewById(R.id.levelText);
         String text = level.getText() + "" + user.getLevel();
         level.setText(text);
@@ -116,7 +115,12 @@ public class CodexPage extends AppCompatActivity {
         Button pressed = findViewById(R.id.codex);
         pressed.setEnabled(false);
         pressed.setTextColor(Color.parseColor("#000000"));
+    }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        setContentView(R.layout.activity_codex_page);
     }
 
     protected void goToHome(View v){

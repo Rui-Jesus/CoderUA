@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class SkillsPage extends AppCompatActivity {
 
     private User user;
-
+    private boolean canSave;
     private int auxPtsToSpend;
     private int auxRange;
     private int auxPts;
@@ -57,6 +57,7 @@ public class SkillsPage extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        setContentView(R.layout.activity_skills_page);
         fillLayout();
     }
 
@@ -95,12 +96,15 @@ public class SkillsPage extends AppCompatActivity {
         checkLevel();
         b = findViewById(R.id.saveButton);
         //User hasn´t spend any points yet, he cannot see nor use this button
-        b.setVisibility(View.GONE);
+        if (!canSave) {
+            b.setVisibility(View.GONE);
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        canSave = false;
         setContentView(R.layout.activity_skills_page);
         user = DataHolder.getInstance().getCurrentUser();
         auxProx  = 250-user.getProximity();
@@ -194,6 +198,7 @@ public class SkillsPage extends AppCompatActivity {
         rateBar.setProgress(auxSpawn-5);
         TextView infoRate = findViewById(R.id.rareInfo);
         infoRate.setText(auxSpawn + "/25");
+        canSave = true;
         checkLevel();
     }
 
@@ -209,6 +214,7 @@ public class SkillsPage extends AppCompatActivity {
         proximity.setProgress(auxProx);
         TextView infoProx = findViewById(R.id.spawnInfo);
         infoProx.setText(auxProx + "/250");
+        canSave = true;
         checkLevel();
     }
 
@@ -224,6 +230,7 @@ public class SkillsPage extends AppCompatActivity {
         nmobsBar.setProgress(auxPts-3);
         TextView infoMobs = findViewById(R.id.pointsInfo);
         infoMobs.setText(auxPts + "/8");
+        canSave = true;
         checkLevel();
     }
 
@@ -239,6 +246,7 @@ public class SkillsPage extends AppCompatActivity {
         rangeBar.setProgress(auxRange-15);
         TextView infoRange = findViewById(R.id.rangeInfo);
         infoRange.setText(auxRange + "/25");
+        canSave = true;
         checkLevel();
     }
 
@@ -250,6 +258,7 @@ public class SkillsPage extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         toDB();
                         checkLevel();
+                        canSave = false;
                         dialog.dismiss();
                     }
                 });
@@ -283,6 +292,7 @@ public class SkillsPage extends AppCompatActivity {
         ProgressBar rateBar = findViewById(R.id.spawnBar);
         rateBar.setProgress(auxSpawn-5);
         Button b = findViewById(R.id.saveButton);
+        canSave = false;
         b.setVisibility(View.GONE);
 
     }
