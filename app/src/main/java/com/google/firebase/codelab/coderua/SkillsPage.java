@@ -87,9 +87,9 @@ public class SkillsPage extends AppCompatActivity {
     private void fillLayout() {
         ProgressBar proximity = findViewById(R.id.proximityBar);
         /*Next wall of code is to set up all the progress bars*/
-        proximity.setProgress(auxProx-150);
+        proximity.setProgress(250 - auxProx);
         TextView infoProx = findViewById(R.id.spawnInfo);
-        infoProx.setText((auxProx-150) + "/100");
+        infoProx.setText((250 - auxProx) + "/100");
         ProgressBar bar = findViewById(R.id.levelBar);
         bar.setProgress(percentage);
         ProgressBar rangeBar = findViewById(R.id.rangeBar);
@@ -144,7 +144,7 @@ public class SkillsPage extends AppCompatActivity {
         } if (auxRange == 25) {
             Button rate = findViewById(R.id.rng);
             rate.setEnabled(false);
-        } if (auxProx == 250) {
+        } if (auxProx == 150) {
             Button range = findViewById(R.id.prox);
             range.setEnabled(false);
         }
@@ -182,7 +182,7 @@ public class SkillsPage extends AppCompatActivity {
         /* The user might not have spent all the points we need to check that */
         user.setUpgradeAvailable(auxPtsToSpend);
         user.setRarerate(auxSpawn);
-        user.setProximity(user.getProximity() - auxProx);
+        user.setProximity(auxProx);
         user.setNmobs(auxPts);
         user.setRange(auxRange);
 
@@ -210,16 +210,16 @@ public class SkillsPage extends AppCompatActivity {
 
     protected void proximity(View v){
         ProgressBar proximity = findViewById(R.id.proximityBar);
-        auxProx +=10; //The mobs spawn closer the more points the user spends here
+        auxProx -=10; //The mobs spawn closer the more points the user spends here
         auxPtsToSpend--;
         Button b = findViewById(R.id.saveButton);
         b.setVisibility(View.VISIBLE);
         TextView ptsSpend = findViewById(R.id.stringpts);
         String newtxt=txt.toString()+" "+auxPtsToSpend;
         ptsSpend.setText(newtxt);
-        proximity.setProgress(auxProx-150);
+        proximity.setProgress(250-auxProx);
         TextView infoProx = findViewById(R.id.spawnInfo);
-        infoProx.setText((auxProx-150) + "/100");
+        infoProx.setText(Math.abs(auxProx-250) + "/100");
         canSave = true;
         checkLevel();
     }
@@ -241,7 +241,7 @@ public class SkillsPage extends AppCompatActivity {
     }
 
     protected void range(View v){
-        auxRange+=5;
+        auxRange+=1;
         auxPtsToSpend--;
         Button b = findViewById(R.id.saveButton);
         b.setVisibility(View.VISIBLE);

@@ -444,6 +444,13 @@ public class LocationService extends Service {
 
     }
 
+    @Override
+    public void onDestroy(){
+        //Service is being destroyed, we want to clear the data holder first to reset app
+        DataHolder.getInstance().destroyHolder();
+        super.onDestroy();
+    }
+
     private double degreesToRadians(double degrees) {
         return degrees * Math.PI / 180;
     }

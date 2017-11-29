@@ -64,6 +64,9 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         serviceLaunched = false;
 
+        /* Because we need to load some data we need to cancel navigation until it's done */
+
+
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API)
@@ -103,6 +106,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         //test.setVisibility(View.GONE);
         pressed.setEnabled(false);
         pressed.setTextColor(Color.parseColor("#000000"));
+
+        /* The user cannot navigate until the activity has finished donwloading data from firebase */
+        findViewById(R.id.skills).setEnabled(false);
+        findViewById(R.id.codex).setEnabled(false);
+        findViewById(R.id.map).setEnabled(false);
     }
 
     /**
@@ -248,6 +256,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 Intent intent = new Intent(this, LocationService.class);
                 this.startService(intent);
             }
+
+            findViewById(R.id.skills).setEnabled(true);
+            findViewById(R.id.codex).setEnabled(true);
+            findViewById(R.id.map).setEnabled(true);
+
         }
         canFillLayout = false;
     }

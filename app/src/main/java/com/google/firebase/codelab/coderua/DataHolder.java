@@ -33,6 +33,23 @@ public class DataHolder {
     private DataHolder() {
     }
 
+    public void destroyHolder(){
+
+        //We need to make sure everything is set to null
+        instance = null;
+
+        permissionsGranted = false;
+        mCurrentLocation = null;
+        mLastUpdateTime = null;
+        listOfMobs = null;
+        mobsToRemove = null;
+        currentUser = null;
+        mFirebaseAuth = null;
+        mGoogleApiClient = null;
+
+
+    }
+
     public GoogleApiClient getmGoogleApiClient() {
         return mGoogleApiClient;
     }
