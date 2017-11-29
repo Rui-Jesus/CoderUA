@@ -43,7 +43,7 @@ public class SkillsPage extends AppCompatActivity {
         canSave = false;
         setContentView(R.layout.activity_skills_page);
         user = DataHolder.getInstance().getCurrentUser();
-        auxProx  = 250-user.getProximity();
+        auxProx  = user.getProximity();
         percentage = user.getPercentage();
         auxRange = user.getRange();
         auxSpawn = user.getRarerate();
@@ -87,23 +87,23 @@ public class SkillsPage extends AppCompatActivity {
     private void fillLayout() {
         ProgressBar proximity = findViewById(R.id.proximityBar);
         /*Next wall of code is to set up all the progress bars*/
-        proximity.setProgress(auxProx);
+        proximity.setProgress(auxProx-150);
         TextView infoProx = findViewById(R.id.spawnInfo);
-        infoProx.setText(auxProx + "/250");
+        infoProx.setText((auxProx-150) + "/100");
         ProgressBar bar = findViewById(R.id.levelBar);
         bar.setProgress(percentage);
         ProgressBar rangeBar = findViewById(R.id.rangeBar);
         rangeBar.setProgress(auxRange-15);
         TextView infoRange = findViewById(R.id.rangeInfo);
-        infoRange.setText(auxRange + "/25");
+        infoRange.setText((auxRange-15) + "/10");
         ProgressBar rateBar = findViewById(R.id.spawnBar);
         rateBar.setProgress(auxSpawn-5);
         TextView infoRate = findViewById(R.id.rareInfo);
-        infoRate.setText(auxSpawn + "/25");
+        infoRate.setText(auxSpawn-5 + "/20");
         ProgressBar nmobsBar = findViewById(R.id.pointsBar);
         nmobsBar.setProgress(auxPts-3);
         TextView infoMobs = findViewById(R.id.pointsInfo);
-        infoMobs.setText(auxPts + "/8");
+        infoMobs.setText(auxPts-3 + "/5");
         TextView level = findViewById(R.id.levelText);
         String text = level.getText() + "" + user.getLevel();
         level.setText(text);
@@ -203,7 +203,7 @@ public class SkillsPage extends AppCompatActivity {
         ProgressBar rateBar = findViewById(R.id.spawnBar);
         rateBar.setProgress(auxSpawn-5);
         TextView infoRate = findViewById(R.id.rareInfo);
-        infoRate.setText(auxSpawn + "/25");
+        infoRate.setText((auxSpawn-5) + "/20");
         canSave = true;
         checkLevel();
     }
@@ -217,9 +217,9 @@ public class SkillsPage extends AppCompatActivity {
         TextView ptsSpend = findViewById(R.id.stringpts);
         String newtxt=txt.toString()+" "+auxPtsToSpend;
         ptsSpend.setText(newtxt);
-        proximity.setProgress(auxProx);
+        proximity.setProgress(auxProx-150);
         TextView infoProx = findViewById(R.id.spawnInfo);
-        infoProx.setText(auxProx + "/250");
+        infoProx.setText((auxProx-150) + "/100");
         canSave = true;
         checkLevel();
     }
@@ -235,7 +235,7 @@ public class SkillsPage extends AppCompatActivity {
         ProgressBar nmobsBar = findViewById(R.id.pointsBar);
         nmobsBar.setProgress(auxPts-3);
         TextView infoMobs = findViewById(R.id.pointsInfo);
-        infoMobs.setText(auxPts + "/8");
+        infoMobs.setText((auxPts-3) + "/5");
         canSave = true;
         checkLevel();
     }
@@ -251,7 +251,7 @@ public class SkillsPage extends AppCompatActivity {
         ProgressBar rangeBar = findViewById(R.id.rangeBar);
         rangeBar.setProgress(auxRange-15);
         TextView infoRange = findViewById(R.id.rangeInfo);
-        infoRange.setText(auxRange + "/25");
+        infoRange.setText(auxRange-15 + "/10");
         canSave = true;
         checkLevel();
     }
@@ -284,19 +284,26 @@ public class SkillsPage extends AppCompatActivity {
         auxPts = user.getNmobs();
         ProgressBar nmobsBar = findViewById(R.id.pointsBar);
         nmobsBar.setProgress(auxPts-3);
+        TextView infoMobs = findViewById(R.id.pointsInfo);
+        infoMobs.setText((auxPts-3) + "/5");
         auxPtsToSpend = user.getUpgradeAvailable();
         TextView ptsSpend = findViewById(R.id.stringpts);
         String newtxt=txt.toString()+" "+auxPtsToSpend;
         ptsSpend.setText(newtxt);
         auxRange = user.getRange();
         ProgressBar rangeBar = findViewById(R.id.rangeBar);
-        rangeBar.setProgress(auxRange-15);
+        rangeBar.setProgress(auxRange-15);TextView infoRange = findViewById(R.id.rangeInfo);
+        infoRange.setText((auxRange-15) + "/10");
         auxProx = user.getProximity();
         ProgressBar proximity = findViewById(R.id.proximityBar);
         proximity.setProgress(auxProx);
         auxSpawn = user.getRarerate();
         ProgressBar rateBar = findViewById(R.id.spawnBar);
         rateBar.setProgress(auxSpawn-5);
+        TextView infoRate = findViewById(R.id.rareInfo);
+        infoRate.setText((auxSpawn-5) + "/20");
+        TextView infoProx = findViewById(R.id.spawnInfo);
+        infoProx.setText((auxProx-150) + "/100");
         Button b = findViewById(R.id.saveButton);
         canSave = false;
         b.setVisibility(View.GONE);

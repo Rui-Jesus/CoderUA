@@ -47,7 +47,8 @@
         android:layout_height="match_parent"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="center"
+        android:layout_marginTop="128dp">
     </com.google.android.gms.ads.AdView>
 
     <android.support.v7.widget.RecyclerView
