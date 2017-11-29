@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private static final String TAG = "MainActivity";
     private GoogleApiClient mGoogleApiClient;
 
+    private boolean first;
+
     private static boolean serviceLaunched;
 
     //By the default, the username is anonymous
@@ -57,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        first = true;
         canFillLayout = true;
 
         serviceLaunched = false;
@@ -97,8 +99,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         /* The user cannot go back to this activity */
         Button pressed = (Button) findViewById(R.id.home);
-        Button test = findViewById(R.id.testButton);
-        test.setVisibility(View.GONE);
+        //Button test = findViewById(R.id.testButton);
+        //test.setVisibility(View.GONE);
         pressed.setEnabled(false);
         pressed.setTextColor(Color.parseColor("#000000"));
     }
@@ -193,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     @Override
     public void onPause() {
+        first = false;
         if (mAdView != null)
             mAdView.pause();
         super.onPause();
@@ -203,16 +206,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onResume();
         if (mAdView != null)
             mAdView.resume();
-
-        /*
-        //The user level might have changed, we need to update it
-        User user = DataHolder.getInstance().getCurrentUser();
-        if(user != null) {
-            ProgressBar bar = findViewById(R.id.levelBar);
-            bar.setProgress(user.getPercentage());
-            TextView level = findViewById(R.id.levelText);
-            level.setText("Lv: " + user.getLevel());
-        }*/
+        if (!first){
+            //The user level might have changed, we need to update it
+            User user = DataHolder.getInstance().getCurrentUser();
+            if(user != null) {
+                ProgressBar bar = findViewById(R.id.levelBar);
+                bar.setProgress(user.getPercentage());
+                TextView level = findViewById(R.id.levelText);
+                level.setText("Lv: " + user.getLevel());
+            }
+        }
     }
 
     @Override
