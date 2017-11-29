@@ -9,6 +9,8 @@
     <string name="using_google" translatable="false">Using Google</string>
     <string name="using_facebook" translatable="false">Using Facebook</string>
     <string name="sign_up">Sign Up</string>
+    <string name="type">Type</string>
+    <string name="nmobs" translatable="false">Number of mobs caught</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="facebook_app_id">157929871485337</string>
@@ -19,8 +21,6 @@
     <string name="wild_programmer" translatable="false">A wild programmer has appeared</string>
     <string name="mob_is" translatable="false">The mob is</string>
     <string name="you_caught_a_monster" translatable="false">You caught a monster</string>
-
-
 
     <!-- User actions -->
     <string name="shake" translatable="false">Shake your phone</string>

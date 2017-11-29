@@ -92,7 +92,9 @@ public class CodexPage extends AppCompatActivity {
             private void PopUp() {
                 AlertDialog alertDialog = new AlertDialog.Builder(CodexPage.this).create();
                 alertDialog.setTitle(popUpMob.getName());
-                alertDialog.setMessage("Type: " + popUpMob.getType() + "\nNumber of mobs caught: " + nmobscaught.get(popUpMob.getMobID()));
+                alertDialog.setMessage(getResources().getString(R.string.type) + ": " + popUpMob.getType()
+                        + "\n" + getResources().getString(R.string.nmobs) + ": "
+                        + nmobscaught.get(popUpMob.getMobID()));
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
