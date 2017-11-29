@@ -120,7 +120,14 @@ public class CodexPage extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        setContentView(R.layout.activity_codex_page);
+        //setContentView(R.layout.activity_codex_page);
+
+        //The user level might have changed, we need to update it
+        User user = DataHolder.getInstance().getCurrentUser();
+        ProgressBar bar = findViewById(R.id.levelBar);
+        bar.setProgress(user.getPercentage());
+        TextView level = findViewById(R.id.levelText);
+        level.setText("Lv: " + user.getLevel());
     }
 
     protected void goToHome(View v){

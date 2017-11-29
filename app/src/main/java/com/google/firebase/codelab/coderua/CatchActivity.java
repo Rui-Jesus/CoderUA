@@ -7,15 +7,18 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class CatchActivity extends AppCompatActivity {
+public class CatchActivity extends AppCompatActivity implements View.OnDragListener {
 
     private static final String TAG = "CatchActivity";
 
@@ -50,8 +53,9 @@ public class CatchActivity extends AppCompatActivity {
         double r = Math.random();
 
         //Depending on the action, we tell the user which activity to do, and set the action flag to select behaviour below.
-        if(r > 0.5) { action = 1; tv.setText(getResources().getString(R.string.hold));}
-        else{action = 0;}
+        if(r >= 0.66) { action = 2;} //tap event
+        else if(r<0.3 && r<0.66) {action = 1; tv.setText(getResources().getString(R.string.hold)); } //hold event
+        else{action = 0; tv.setText(getResources().getString(R.string.drag)); } //drag event
 
         /* We create an alert dialog here to be used below  */
         builder1 = new AlertDialog.Builder(this);
@@ -59,7 +63,7 @@ public class CatchActivity extends AppCompatActivity {
                 "\n" +
                 "\t " +  getResources().getString(R.string.mob_is) + " " +
                 MobsHolder.getInstance(this).getMobById(mobID).getName());
-        builder1.setCancelable(true);
+        builder1.setCancelable(false);
 
         builder1.setPositiveButton(
                 R.string.OK,
@@ -98,13 +102,19 @@ public class CatchActivity extends AppCompatActivity {
                 });
 
         //Set up progress bar
-        progBar.setVisibility(View.VISIBLE);
 
-        if(action == 0){
+        if(action == 1){
+            progBar.setMax(CLICK_DURATION);
+            progBar.setVisibility(View.VISIBLE);
+            findViewById(R.id.container).setVisibility(View.GONE);
+        }
+        else if(action == 2){
             progBar.setMax(4);
+            progBar.setVisibility(View.VISIBLE);
+            findViewById(R.id.container).setVisibility(View.GONE);
         }
         else{
-            progBar.setMax(CLICK_DURATION);
+            findViewById(R.id.container).setOnDragListener(this);
         }
 
         iv.setOnTouchListener(new View.OnTouchListener() {
@@ -114,7 +124,7 @@ public class CatchActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
 
                 //We want tap events
-                if(action == 0 && event.getAction() ==  MotionEvent.ACTION_DOWN){
+                if(action == 2 && event.getAction() ==  MotionEvent.ACTION_DOWN){
                     nTaps++;
                     progBar.setProgress(progBar.getProgress() + 1);
                     if(nTaps == 4) {
@@ -126,9 +136,6 @@ public class CatchActivity extends AppCompatActivity {
                 //We want long click events
                 else if(action == 1){
 
-                    MyAsyncTask myTask = new MyAsyncTask();
-
-                    /*
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN: //We record the time he clicks on the screen
                             t1 = System.currentTimeMillis();
@@ -143,26 +150,18 @@ public class CatchActivity extends AppCompatActivity {
                                 AlertDialog alert11 = builder1.create();
                                 alert11.show();
                             }
-                    }*/
-
-
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN: //We record the time he clicks on the screen
-                            t1 = System.currentTimeMillis();
-                            myTask.execute();
-                            break;
-
-                        case MotionEvent.ACTION_UP:
-                            t2 = System.currentTimeMillis();
-                            if ((t2 - t1) < CLICK_DURATION){ //Click did not last long enough
-                                myTask.cancel(true); //We stop the activity
-                                progBar.setProgress(0);//We reset the progress bar
-                                progBar.setVisibility(View.INVISIBLE);
-                            }
                     }
 
-                    new MyAsyncTask().execute();
+                }
 
+                else if(action == 0){
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                        v.startDrag(null, shadowBuilder, v, 0);
+                        v.setVisibility(View.INVISIBLE);
+                    } else {
+                        return false;
+                    }
                 }
                 return true;
             }
@@ -172,12 +171,44 @@ public class CatchActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onDrag(View v, DragEvent e) {
+
+        if (e.getAction() == DragEvent.ACTION_DROP) {
+
+            if(v.getId() == R.id.container){
+                View view = (View) e.getLocalState();
+                ViewGroup from = (ViewGroup) view.getParent();
+                from.removeView(view);
+                LinearLayout to = (LinearLayout) v;
+                to.addView(view);
+                view.setVisibility(View.VISIBLE);
+
+                //This was the correct action, we want to finish
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+                return true;
+            }
+
+            else{
+                View view = (View) e.getLocalState();
+                ViewGroup from = (ViewGroup) view.getParent();
+                from.addView(view);
+                view.setVisibility(View.VISIBLE);
+            }
+
+        }
+
+        return true;
+    }
+
+    @Override
     public void onDestroy(){
         super.onDestroy();
         //When finish() is called, this is the method that is executed imediately afterwards
         notActive = true;
     }
 
+    //NOT IN USE
     // The types specified here are the input data type, the progress type, and the result type
     /**
      * A private class to handle some quick jobs that the map needs. Used to prevent blocking the UI thread

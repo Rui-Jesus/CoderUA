@@ -17,6 +17,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.auth.api.Auth;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         canFillLayout = true;
 
         serviceLaunched = false;
@@ -198,6 +201,16 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onResume();
         if (mAdView != null)
             mAdView.resume();
+
+        /*
+        //The user level might have changed, we need to update it
+        User user = DataHolder.getInstance().getCurrentUser();
+        if(user != null) {
+            ProgressBar bar = findViewById(R.id.levelBar);
+            bar.setProgress(user.getPercentage());
+            TextView level = findViewById(R.id.levelText);
+            level.setText("Lv: " + user.getLevel());
+        }*/
     }
 
     @Override

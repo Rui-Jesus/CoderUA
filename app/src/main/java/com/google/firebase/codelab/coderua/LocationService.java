@@ -1,5 +1,6 @@
 package com.google.firebase.codelab.coderua;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -37,7 +38,7 @@ import java.util.TreeSet;
 
 
 /**
- * Created by ruigr on 16/11/2017.
+ * Service to hold all core logic of the app
  */
 
 public class LocationService extends Service {
@@ -167,7 +168,7 @@ public class LocationService extends Service {
                 e.printStackTrace();
             }
 
-            startListening(); //We want to start listening for updates
+            startListening(); //We want to start listening for updates on the database
 
             while(true){
                 checkDistance(0.3, 0.090, range/1000); //300 meters | 90 meters | range to catch mob
@@ -251,12 +252,14 @@ public class LocationService extends Service {
     /**
      * Method to receive periodically location updates from the fused location client
      */
+    @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
         // Begin by checking if the device has the necessary location settings.
         if(DataHolder.getInstance().getPermissionsGranted()){
             Log.i(TAG, "All location settings are satisfied.");
 
-            //noinspection MissingPermission
+            //We should use check permission here, but because we make sure the permission is requested at launch
+            //And this service is not started unless permissions have been granted, there is no need
             mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
         }
     }

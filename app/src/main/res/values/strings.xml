@@ -7,8 +7,13 @@
     <string name="sign_out">Sign Out</string>
     <string name="sign_in">Sign In</string>
     <string name="using_google" translatable="false">Using Google</string>
+    <string name="using_facebook" translatable="false">Using Facebook</string>
     <string name="sign_up">Sign Up</string>
+
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="facebook_app_id">157929871485337</string>
+    <string name="fb_login_protocol_scheme">fb157929871485337</string>
+
     <string name="complete_activity" translatable="false">Complete the following activity</string>
     <string name="monster_nearby" translatable="false">Monster near by !!!</string>
     <string name="wild_programmer" translatable="false">A wild programmer has appeared</string>
@@ -41,9 +46,9 @@
     <!--String for topbar-->
     <string name="level">Lv. </string>
 
-    <string name="pts">Upgrades available: </string>
-    <string name="save">Save</string>
-    <string name="question">Are you sure you want to make the upgrades added?</string>
+    <string name="pts" translatable="false">Upgrades available: </string>
+    <string name="save" translatable="false">Save</string>
+    <string name="question" translatable="false">Are you sure you want to make the upgrades added?</string>
 
     <!--Strings for skills page-->
     <string name="skills_menu">Skills Menu</string>

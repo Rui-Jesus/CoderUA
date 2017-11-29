@@ -155,8 +155,6 @@ public class MapsActivity2 extends AppCompatActivity
             locationReceived.setLatitude(currentLatitude);
             locationReceived.setLongitude(currentLongitude);
 
-            //We place a marker on the map with a different color, around the user
-            //In the future different mobs will have different colors
             MarkerOptions a = new MarkerOptions()
                     .position(new LatLng(locationReceived.getLatitude(),locationReceived.getLongitude()))
                     .icon(BitmapDescriptorFactory.fromBitmap(bitmap));
@@ -262,7 +260,7 @@ public class MapsActivity2 extends AppCompatActivity
         ArrayList<Mob> lst = DataHolder.getInstance().getListOfMobs();
 
         //The same code present in broadcast receiver 2
-        if(lst != null && canDraw) { //The list might be empty, if the user opened this activity way too fast
+        if(lst != null) { //The list might be empty, if the user opened this activity way too fast
             Log.i(TAG, "Mobs to draw: " + lst.size());
             for (Mob mob : lst) {
                 MarkerOptions a = new MarkerOptions()

@@ -74,6 +74,14 @@ public class SkillsPage extends AppCompatActivity {
         super.onResume();
         setContentView(R.layout.activity_skills_page);
         fillLayout();
+
+
+        //The user level might have changed, we need to update it
+        User user = DataHolder.getInstance().getCurrentUser();
+        ProgressBar bar = findViewById(R.id.levelBar);
+        bar.setProgress(user.getPercentage());
+        TextView level = findViewById(R.id.levelText);
+        level.setText("Lv: " + user.getLevel());
     }
 
     private void fillLayout() {
