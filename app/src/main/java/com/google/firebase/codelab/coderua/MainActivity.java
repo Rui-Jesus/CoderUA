@@ -102,8 +102,11 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
         /* The user cannot go back to this activity */
         Button pressed = (Button) findViewById(R.id.home);
-        //Button test = findViewById(R.id.testButton);
-        //test.setVisibility(View.GONE);
+
+        /* To test the catch activity, comment the 2 following lines */
+        Button test = findViewById(R.id.testButton);
+        test.setVisibility(View.GONE);
+
         pressed.setEnabled(false);
         pressed.setTextColor(Color.parseColor("#000000"));
 
