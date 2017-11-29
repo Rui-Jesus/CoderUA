@@ -46,18 +46,20 @@ public class CodexPage extends AppCompatActivity {
             mobsCaught = new ArrayList<>();
         mobs1 = new ArrayList<>();
         boolean inList = false;
+
         for (Integer i: mobsCaught) {
             if(i != null){
                 if (nmobscaught.containsKey(i)){
                     int n=nmobscaught.get(i);
-                    Log.i("N da porra:", String.valueOf(n));
-                    nmobscaught.put(i, n++);
+                    Log.i("N da porra: ", String.valueOf(n));
+                    nmobscaught.put(i, nmobscaught.get(i) + 1);
                 } else {
                     nmobscaught.put(i, 1);
                 }
             }
 
         }
+
         for (Iterator<Integer> it = mobs.iterator(); it.hasNext(); ) {
             int f = it.next();
             for (Integer i: mobsCaught) {
@@ -78,6 +80,7 @@ public class CodexPage extends AppCompatActivity {
             }
 
         }
+
         final CustomList adapter = new CustomList(CodexPage.this, web, mobs1);
         list = findViewById(R.id.list);
         list.setAdapter(adapter);
@@ -94,7 +97,9 @@ public class CodexPage extends AppCompatActivity {
             private void PopUp() {
                 AlertDialog alertDialog = new AlertDialog.Builder(CodexPage.this).create();
                 alertDialog.setTitle(popUpMob.getName());
-                alertDialog.setMessage("Type: " + popUpMob.getType() + "\nNumber of mobs caught: " + nmobscaught.get(popUpMob.getMobID()));
+                alertDialog.setMessage(getResources().getString(R.string.type) + ": " + popUpMob.getType()
+                        + "\n" + getResources().getString(R.string.nmobs) + ": "
+                        + nmobscaught.get(popUpMob.getMobID()));
                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
