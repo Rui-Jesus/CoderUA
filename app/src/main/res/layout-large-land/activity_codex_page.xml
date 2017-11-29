@@ -7,34 +7,36 @@
 
     <include layout="@layout/bottombar"/>
 
-    <include layout="@layout/topbar"
-        android:id="@+id/include"/>
+
+    <include layout="@layout/topbar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="76dp"
+        android:layout_marginBottom="92dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="48dp"
-            android:layout_marginBottom="96dp">
+            android:gravity="center">
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="24sp"
+                android:textSize="32sp"
                 android:textStyle="bold"
                 android:text="Codex"/>
 
             <ListView
                 android:id="@+id/list"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_margin="16dp"/>
         </LinearLayout>
     </LinearLayout>
+
+
 </RelativeLayout>

@@ -49,9 +49,7 @@ public class CodexPage extends AppCompatActivity {
         for (Integer i: mobsCaught) {
             if(i != null){
                 if (nmobscaught.containsKey(i)){
-                    int n=nmobscaught.get(i);
-                    Log.i("N da porra:", String.valueOf(n));
-                    nmobscaught.put(i, n++);
+                    nmobscaught.put(i, nmobscaught.get(i) + 1);
                 } else {
                     nmobscaught.put(i, 1);
                 }

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity"
-    android:background="@drawable/campus_ua">
+    android:background="@drawable/backgroundua">
 
     <include
         layout="@layout/bottombar"
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="28sp"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="76dp"
             android:textStyle="bold"
             android:text="@string/welcome_page" />
         <Button
@@ -47,7 +47,8 @@
         android:layout_height="match_parent"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"
-        android:layout_gravity="center_vertical">
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="600dp">
     </com.google.android.gms.ads.AdView>
 
     <android.support.v7.widget.RecyclerView
